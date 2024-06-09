@@ -1,0 +1,86 @@
+.victims-data{
+    .headerdiv {
+        
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .headerdiv h2 {
+        
+        margin: 0;
+    }
+    
+    .headerdiv .deletedead {
+        
+        padding: 10px 20px;
+        background-color: #c75151;
+        color: black;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    .table-wrapper {
+        position: relative;
+        
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid white;
+            border-radius: 15px;
+            overflow: hidden;
+            width: 100%;
+            margin: 20px 0;
+
+
+            td {
+                text-align: left;
+                border: 1px solid #ddd;
+                padding: 8px;
+                font-weight: bold; 
+                
+                
+                
+            }
+
+
+
+            th {
+                text-align: left;
+                border: 1px solid #ddd;
+                padding: 8px;
+                background-color: #c75151;
+            }
+        }
+    }
+}
+
+/* Pagination controls */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    background-color: #c75151;
+    color: black;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    margin: 0 10px;
+}

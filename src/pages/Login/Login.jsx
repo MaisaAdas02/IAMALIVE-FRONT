@@ -7,13 +7,15 @@ import { BsShieldLockFill } from "react-icons/bs";
 import { AiOutlineSwapRight } from "react-icons/ai";
 
 //import our assets
-import video from "../../LoginAssets/video.mp4";
-import logo from "../../LoginAssets/iamalive.png";
+import video from "../../assets/video.mp4";
+import logo from "../../assets/iamalive.png";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { UserContext } from "../../context/UserProvider";
+import InputBox from "../../Components/InputBox/InputBox";
+import Loading from "../../Components/Loading/Loading";
 
 const Login = () => {
      const navigate = useNavigate();
@@ -40,20 +42,11 @@ const Login = () => {
                if (data.role === "Victim") {
                     toast.error("You are not allowed to sign in here.");
                } else {
-                    // localStorage.setItem("token", data.token);
                     setToken(data.token);
-                    setUser(data.user);
                     navigate("/dashboard");
                }
           },
-          onError: (error) => {
-               toast.error(
-                    error.response.data.message || "Something went wrong!!"
-               );
-          },
      });
-
-
 
      return (
           <div className="loginPage flex">
@@ -89,36 +82,32 @@ const Login = () => {
                                    login(formInfo);
                               }}
                          >
-                              <div className="inputDiv">
-                                   <div className="input flex">
-                                        <FaUserShield className="icon" />
-                                        <input
-                                             type="email"
-                                             required
-                                             name="email"
-                                             value={formInfo.email}
-                                             onChange={handleChange}
-                                             placeholder="Enter Email"
-                                        />
-                                   </div>
-                              </div>
-                              <div className="inputDiv">
-                                   <div className="input flex">
-                                        <BsShieldLockFill className="icon" />
-                                        <input
-                                             type="password"
-                                             required
-                                             name="password"
-                                             value={formInfo.password}
-                                             onChange={handleChange}
-                                             placeholder="********"
-                                        />
-                                   </div>
-                              </div>
+                              <InputBox
+                                   handleChange={handleChange}
+                                   input={{
+                                        name: "email",
+                                        type: "email",
+                                        icon: FaUserShield,
+                                        placeholder: "example@gmail.com",
+                                        value: formInfo.email,
+                                   }}
+                                   required
+                              />
+                              <InputBox
+                                   handleChange={handleChange}
+                                   input={{
+                                        name: "password",
+                                        type: "password",
+                                        icon: BsShieldLockFill,
+                                        placeholder: "*******",
+                                        value: formInfo.password,
+                                   }}
+                                   required
+                              />
 
                               <button type="submit" className="btn flex">
                                    <span>
-                                        {isPending ? "Loading..." : "Login"}
+                                        {isPending ? <Loading /> : "Login"}
                                    </span>
                                    <AiOutlineSwapRight className="icon" />
                               </button>

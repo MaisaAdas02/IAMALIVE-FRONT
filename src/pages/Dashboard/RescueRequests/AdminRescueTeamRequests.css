@@ -1,0 +1,106 @@
+.rescue-requests {
+    .table-wrapper {
+        position: relative;
+        
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid white;
+            border-radius: 15px;
+            overflow: hidden;
+            width: 100%;
+            margin: 20px 0;
+            
+            tr:nth-child(even) {
+                background-color: rgba(197, 83, 96, 0.205);
+            }
+
+            td {
+                text-align: left;
+                border: 1px solid #ddd;
+                padding: 8px;
+                font-weight: bold; 
+                
+                
+                
+            }
+
+            .actionbuttons{
+                    text-align: center;
+                }
+
+            th {
+                text-align: left;
+                border: 1px solid #ddd;
+                padding: 8px;
+                background-color: #c75151;
+            }
+
+            .accept {
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                border: none;
+                outline: none;
+                border: 1px solid #ddd;
+                background-color: #5fb286c1;
+                color: black;
+                font-weight: bold;
+                align-self: center;
+                cursor: pointer;
+
+                &:disabled {
+                    cursor: not-allowed;
+                    opacity: 0.5;
+                }
+            }
+
+            .delete{
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                border: none;
+                outline: none;
+                border: 1px solid #ddd;
+                background-color: #c75151cf;
+                color: black;
+                font-weight: bold;
+                align-self: center;
+                margin-left:  1rem;
+                cursor: pointer;
+
+                &:disabled {
+                    cursor: not-allowed;
+                    opacity: 0.5;
+                }
+            }
+        }
+    }
+}
+
+/* Pagination controls */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    background-color: #c75151;
+    color: black;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    margin: 0 10px;
+}

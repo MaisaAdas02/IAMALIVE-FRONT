@@ -32,11 +32,11 @@ import {
 } from "@mui/icons-material";
 import "./Dashboard.css";
 import "../../../App.css";
-import iamalive from "../../../LoginAssets/iamalive.png";
+import iamalive from "../../../assets/iamalive.png";
 import { UserContext } from "../../../context/UserProvider";
 
 const drawerWidth = 240;
-const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
 
 function MyApp() {
      const theme = useTheme();
@@ -109,7 +109,7 @@ function Dashboard(props) {
           }
      };
 
-     const { setToken, setUser } = useContext(UserContext);
+     const { setToken, setUser, user } = useContext(UserContext);
 
      const handleLogout = () => {
           setToken("");
@@ -123,6 +123,14 @@ function Dashboard(props) {
           { text: "Requests", icon: <TableRowsIcon />, path: "requests" },
           { text: "Map", icon: <MapIcon />, path: "map" },
      ];
+
+     if (user && user.role === "SuperAdmin") {
+          menuItems.push({
+               text: "RescueTeam Requests",
+               icon: <TableRowsIcon />,
+               path: "rescue-requests",
+          });
+     }
 
      const drawer = (
           <Box
@@ -155,15 +163,15 @@ function Dashboard(props) {
                     <Button
                          variant="contained"
                          sx={{
-                              backgroundColor: "#c75151",
-                              color: "black",
-                              "&:hover": { backgroundColor: "#b04141" },
+                              backgroundColor: "black",
+                              color: "#c75151",
+                              "&:hover": { backgroundColor: "#b04141",color:'black'},
                          }}
                          startIcon={<LogoutIcon />}
                          onClick={handleLogout}
                          fullWidth
                     >
-                         Log Out
+                         LogOut
                     </Button>
                </Box>
           </Box>

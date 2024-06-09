@@ -62,23 +62,6 @@ img, video {
   display: none;
 }
 
-.showMessage {
-  display: block;
-  color: var(--whiteColor);
-  padding: 10px;
-  background: var(--primaryColor);
-  border-radius: 3px;
-  text-align: center;
-}
-
-.showMessage {
-  display: block;
-  color: var(--whiteColor);
-  background: rgb(255, 0, 0);
-  border-radius: 3px;
-  text-align: center;
-}
-
 .btn {
   border: none;
   outline: none;
@@ -506,5 +489,26 @@ img, video {
 }*/
 ::-webkit-scrollbar {
   display: none;
+}
+
+.loading-spinner {
+  --size: 40px;
+  --loading-clr: white;
+  width: var(--size);
+  height: var(--size);
+  border-right: 2px solid var(--loading-clr);
+  border-radius: 50%;
+  -webkit-animation: spin 0.5s infinite linear;
+          animation: spin 0.5s infinite linear;
+}
+@-webkit-keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
 }
 /*# sourceMappingURL=App.css.map */

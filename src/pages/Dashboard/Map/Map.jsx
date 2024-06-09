@@ -8,7 +8,7 @@ import { MaptilerLayer } from "@maptiler/leaflet-maptilersdk";
 const Map = () => {
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const center = { lng: 35.0502135, lat: 32.2842321 }; // Coordinates for Anabta city
+    const center = { lng:35.06069 , lat:32.32978  }; // Coordinates for Anabta city
     const [zoom] = useState(12);
 
     useEffect(() => {
