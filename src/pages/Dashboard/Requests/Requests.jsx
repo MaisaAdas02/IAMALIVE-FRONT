@@ -1,61 +1,57 @@
-import React, { useContext, useState } from 'react'
-import { UserContext } from '../../../context/UserProvider';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import Loading from '../../../Components/Loading/Loading';
-import { toast } from 'sonner';
+import React, { useContext, useState } from "react";
+import { UserContext } from "../../../context/UserProvider";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import Loading from "../../../Components/Loading/Loading";
+import { toast } from "sonner";
+import StatusColor from "../../../Components/StatusColor/StatusColor";
 
 function Requests() {
-  const { token } = useContext(UserContext)
-  const [currentPage, setCurrentPage] = useState(1);
+    const { token } = useContext(UserContext);
+    const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
-  const {
-    data: sosvictims,
-    isLoading,
-    error,
-} = useQuery({
-    queryKey: ['sos-data'],
-    queryFn: async () => {
-      const { data } = await axios.get('/rescueTeam/sosVictims', {
-        headers: {
-          Authorization: `IAMALIVE__${token}`
-        }
-      })
-      return data.victims;
-    },
-  });
+    const {
+        data: sosvictims,
+        isLoading,
+        error,
+    } = useQuery({
+        queryKey: ["sos-data"],
+        queryFn: async () => {
+            const { data } = await axios.get("/rescueTeam/sosVictims", {
+                headers: {
+                    Authorization: `IAMALIVE__${token}`,
+                },
+            });
+            return data.victims;
+        },
+    });
 
+    if (isLoading) {
+        return <Loading size={30} color="black" />;
+    }
 
+    if (error) {
+        toast.error(error.response.data.message || "Error !");
+    }
 
-  if (isLoading) {
+    if (sosvictims && sosvictims.length == 0) {
+        return <p>No Victim Requsts!</p>;
+    }
+
+    // Pagination logic
+    const totalPages = Math.ceil(sosvictims.length / itemsPerPage);
+    const currentRequests =
+        sosvictims.slice(
+            (currentPage - 1) * itemsPerPage,
+            currentPage * itemsPerPage
+        ) || [];
+
     return (
-      <Loading size={30} color="black" />
-    )
-  }
-
-  if (error) {
-    toast.error(error.response.data.message || "Error !")
-  }
-
-  if (sosvictims && sosvictims.length == 0) {
-    return (
-      <p>
-        No Victim Requsts!
-      </p>
-    )
-  }
-
-   // Pagination logic
-  const totalPages = Math.ceil(sosvictims.length / itemsPerPage);
-  const currentRequests = sosvictims.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage )|| [];
-
-  return (
-        <div className='sosvictims-data'>
-            <div className='headerdiv'>
+        <div className="sosvictims-data">
+            <div className="headerdiv">
                 <h2>SOSVictims Data</h2>
-                
             </div>
-            
+
             <div className="table-wrapper">
                 <table>
                     <thead>
@@ -65,32 +61,33 @@ function Requests() {
                             <th>Longitude</th>
                             <th>Latitude</th>
                             <th>HeartRate</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {currentRequests.map(req => (
-                            <tr key={req._id}>
-                                <td><p>{req.name}</p></td>
-                                <td><p>{req.city}</p></td>
-                                <td><p>{req.location.longitude}</p></td>
-                                <td><p>{req.location.latitude}</p></td>
-                                <td><p>{req.heartRate}</p></td>
-                                
-                            </tr>
+                        {currentRequests.map((req) => (
+                            <RequestRow key={req._id} req={req} />
                         ))}
                     </tbody>
                 </table>
             </div>
             <div className="pagination">
                 <button
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    onClick={() =>
+                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
                     disabled={currentPage === 1}
                 >
                     Previous
                 </button>
-                <span>Page {currentPage} of {totalPages}</span>
+                <span>
+                    Page {currentPage} of {totalPages}
+                </span>
                 <button
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    onClick={() =>
+                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
                     disabled={currentPage === totalPages}
                 >
                     Next
@@ -100,4 +97,74 @@ function Requests() {
     );
 }
 
-export default Requests
+export default Requests;
+
+const RequestRow = ({ req }) => {
+    const { token } = useContext(UserContext);
+    const queryClient = useQueryClient();
+    const changeStatusMutation = useMutation({
+        mutationFn: async ({ status, userId }) => {
+            const { data } = await axios.put(
+                `/rescueTeam/victims/${userId}/updateRescueStatus`,
+                {
+                    status,
+                },
+                {
+                    headers: {
+                        Authorization: `IAMALIVE__${token}`,
+                    },
+                }
+            );
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["sos-data"],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["victimsdata"],
+            });
+            toast.success("Status updated successfully");
+        },
+    });
+
+    const handleChangeStatus = (e) => {
+        changeStatusMutation.mutate({
+            status: e.target.value,
+            userId: req._id,
+        });
+    };
+    return (
+        <tr>
+            <td>
+                <p>{req.name}</p>
+            </td>
+            <td>
+                <p>{req.city}</p>
+            </td>
+            <td>
+                <p>{req.location ? req.location.longitude : "N/A"}</p>
+            </td>
+            <td>
+                <p>{req.location ? req.location.latitude : "N/A"}</p>
+            </td>
+            <td>
+                <p>{req.heartRate}</p>
+            </td>
+            <td>
+                <StatusColor status={req.status} />
+            </td>
+            <td>
+                {changeStatusMutation.isPending ? (
+                    <Loading color="black" size={20} />
+                ) : (
+                    <select value={req.status} onChange={handleChangeStatus}>
+                        <option value="danger">Danger</option>
+                        <option value="inProgress">InProgress</option>
+                        <option value="normal">Normal</option>
+                    </select>
+                )}
+            </td>
+        </tr>
+    );
+};

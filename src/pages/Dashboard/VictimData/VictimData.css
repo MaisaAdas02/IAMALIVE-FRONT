@@ -1,59 +1,22 @@
-.victims-data{
+.victims-data {
     .headerdiv {
-        
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
     }
-    
+
     .headerdiv h2 {
-        
         margin: 0;
     }
-    
+
     .headerdiv .deletedead {
-        
         padding: 10px 20px;
         background-color: #c75151;
         color: black;
         border: none;
         cursor: pointer;
         border-radius: 5px;
-    }
-    .table-wrapper {
-        position: relative;
-        
-
-        table {
-            border-collapse: separate;
-            border-spacing: 0;
-            border: 1px solid white;
-            border-radius: 15px;
-            overflow: hidden;
-            width: 100%;
-            margin: 20px 0;
-
-
-            td {
-                text-align: left;
-                border: 1px solid #ddd;
-                padding: 8px;
-                font-weight: bold; 
-                
-                
-                
-            }
-
-
-
-            th {
-                text-align: left;
-                border: 1px solid #ddd;
-                padding: 8px;
-                background-color: #c75151;
-            }
-        }
     }
 }
 
@@ -83,4 +46,12 @@
 
 .pagination span {
     margin: 0 10px;
+}
+
+.overlay-custom {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
 }
