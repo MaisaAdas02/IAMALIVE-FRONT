@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import Loadingcircle from "../../Components/Loadingcircle/Loadingcircle";
 
 const SendCode = () => {
     const navigate = useNavigate()
@@ -55,25 +56,32 @@ const SendCode = () => {
     }
 
     return (
-        <div>
-            <h1>Enter your email</h1>
-            <form onSubmit={handleSubmit1}>
-                <input
-                    type="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
-                    placeholder="example@gmail.com"
-                />
+        <div className="pageContainer">
+            {!showForgetForm && (
+                <form className="sendEmail" onSubmit={handleSubmit1}>
+                    <h1>Enter your email</h1>
+                    <input
+                        type="email"
+                        onChange={(e) => setEmail(e.target.value)}
+                        value={email}
+                        placeholder="example@gmail.com"
+                    />
 
-                <button type="submit">
-                    {sendCodeMutation.isPending ? "Loading..." : "Submit"}
-                </button>
-            </form>
+                    <button type="submit">
+                        {sendCodeMutation.isPending ? (
+                                <Loadingcircle color="black" size={20} />
+                            ) : (
+                                "Submit"
+                            )}
+                    </button>
+                </form>
+            )}
 
             {showForgetForm && (
                 <>
-                    <h2>Enter the code & new password</h2>
-                    <form onSubmit={handleSubmit2}>
+                    
+                    <form className="resetpassword" onSubmit={handleSubmit2}>
+                        <h2>Enter the code & new password</h2>
                         <input
                             type="text"
                             onChange={(e) => setForgetData(prev => ({ ...prev, code: e.target.value }))}
@@ -88,7 +96,11 @@ const SendCode = () => {
                         />
 
                         <button type="submit">
-                        {forgetMutation.isPending ? "Loading..." : "Submit"}
+                        {forgetMutation.isPending ? (
+                                <Loadingcircle color="black" size={20} />
+                            ) : (
+                                "Submit"
+                            )}
                         </button>
                     </form>
                 </>

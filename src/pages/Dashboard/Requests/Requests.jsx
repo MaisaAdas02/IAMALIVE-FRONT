@@ -5,6 +5,7 @@ import axios from "axios";
 import Loading from "../../../Components/Loading/Loading";
 import { toast } from "sonner";
 import StatusColor from "../../../Components/StatusColor/StatusColor";
+import HeartRate from "../../../Components/HeartRate/HeartRate";
 
 function Requests() {
     const { token } = useContext(UserContext);
@@ -149,7 +150,11 @@ const RequestRow = ({ req }) => {
                 <p>{req.location ? req.location.latitude : "N/A"}</p>
             </td>
             <td>
-                <p>{req.heartRate}</p>
+                {req.heartRate !== 0 ? (
+                    <HeartRate value={req.heartRate} />
+                ) : (
+                    <p>{req.heartRate}</p>
+                )}
             </td>
             <td>
                 <StatusColor status={req.status} />
@@ -158,7 +163,7 @@ const RequestRow = ({ req }) => {
                 {changeStatusMutation.isPending ? (
                     <Loading color="black" size={20} />
                 ) : (
-                    <select value={req.status} onChange={handleChangeStatus}>
+                    <select className="custom-select" value={req.status} onChange={handleChangeStatus}>
                         <option value="danger">Danger</option>
                         <option value="inProgress">InProgress</option>
                         <option value="normal">Normal</option>

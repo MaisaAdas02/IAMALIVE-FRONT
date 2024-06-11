@@ -9,6 +9,7 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 
 import "./VictimData.css";
 import StatusColor from "../../../Components/StatusColor/StatusColor";
+import HeartRate from "../../../Components/HeartRate/HeartRate";
 
 const VictimData = () => {
     const { token } = useContext(UserContext);
@@ -59,7 +60,7 @@ const VictimData = () => {
                 },
                 {
                     label: "Cancel",
-                    onClick: () => {},
+                    onClick: () => { },
                 },
             ],
             overlayClassName: "overlay-custom",
@@ -132,7 +133,11 @@ const VictimData = () => {
                                     </p>
                                 </td>
                                 <td>
-                                    <p>{req.heartRate}</p>
+                                    {req.heartRate !== 0 ? (
+                                        <HeartRate value={req.heartRate} />
+                                    ) : (
+                                        <p>{req.heartRate}</p>
+                                    )}
                                 </td>
                                 <td>
                                     <StatusColor status={req.status} />

@@ -1,0 +1,109 @@
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: rgba(204, 89, 89, 0.3);
+}
+
+.sendEmail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    width: 500px;
+    margin: 0;
+    padding: 20px;
+    border: 1px solid #c75151;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(22, 16, 16, 0.762);
+    background-color: #f3ecec82;
+
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    input:focus {
+        border-color: #c75151;
+        background-color: rgba(199, 81, 81, 0.063);
+        outline: none;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #c75151;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: rgba(199, 81, 81, 0.153);
+    }
+}
+
+.resetpassword {
+    background-color: rgba(204, 89, 89, 0.186);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    width: 400px;
+    margin: 0;
+    border: 1px solid #c75151;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(204, 89, 89, 0.544);
+    background-color: #f3ecec82;
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 50%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    input:focus {
+        border-color: #c75151;
+        background-color: rgba(199, 81, 81, 0.063);
+        outline: none;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #c75151;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+        padding-bottom: 5px;
+    }
+
+    button:hover {
+        background-color: rgba(199, 81, 81, 0.153);
+    }
+}

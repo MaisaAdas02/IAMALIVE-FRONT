@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { UserContext } from "../../context/UserProvider";
 import InputBox from "../../Components/InputBox/InputBox";
-import Loading from "../../Components/Loading/Loading";
+import Loadingcircle from "../../Components/Loadingcircle/Loadingcircle";
 
 const Login = () => {
      const navigate = useNavigate();
@@ -75,7 +75,7 @@ const Login = () => {
                          </div>
 
                          <form
-                              action=""
+                              
                               className="form grid"
                               onSubmit={(e) => {
                                    e.preventDefault();
@@ -107,7 +107,7 @@ const Login = () => {
 
                               <button type="submit" className="btn flex">
                                    <span>
-                                        {isPending ? <Loading /> : "Login"}
+                                        {isPending ? <Loadingcircle /> : "Login"}
                                    </span>
                                    <AiOutlineSwapRight className="icon" />
                               </button>

@@ -1,0 +1,15 @@
+.loading-spinner {
+    --size: 40px;
+    --loading-clr: white;
+    width: var(--size);
+    height: var(--size);
+    border-right: 2px solid var(--loading-clr);
+    border-radius: 50%;
+    animation: spin .5s infinite linear;
+
+    @keyframes spin {
+        to {
+            transform: rotate(1turn);
+        }
+    }
+}

@@ -1,0 +1,74 @@
+/* Form container style */
+.formInfo {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f3ecec82;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 8px rgba(204, 89, 89, 0.544);
+
+}
+
+/* Input box style */
+.inputBox {
+    margin-bottom: 20px;
+}
+
+/* Label and input alignment */
+.inputBox label {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: black;
+    font-weight: bold;
+
+}
+
+/* Input field style */
+.inputBox input {
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+
+
+}
+
+.inputBox input:focus {
+    border-color: #c75151;
+    background-color: rgba(199, 81, 81, 0.063);
+    outline: none;
+}
+
+/* Disabled input field style */
+.inputBox input[disabled] {
+    background-color: rgba(199, 81, 81, 0.058);
+    cursor: not-allowed;
+}
+
+/* Update button style */
+.updateButton {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #c75151;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+
+.updateButton:hover {
+    background-color: rgba(199, 81, 81, 0.153);
+}
+
+/* Loading indicator alignment */
+.updateButton .loading {
+    vertical-align: middle;
+}

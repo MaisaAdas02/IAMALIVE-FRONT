@@ -15,6 +15,7 @@ import video from "../../assets/video.mp4";
 import logo from "../../assets/iamalive.png";
 import InputBox from "../../Components/InputBox/InputBox";
 import Loading from "../../Components/Loading/Loading";
+import Loadingcircle from "../../Components/Loadingcircle/Loadingcircle";
 
 const Register = () => {
      const [formdata, setFormdata] = useState({
@@ -131,7 +132,7 @@ const Register = () => {
                                    disabled={isPending}
                               >
                                    <span>
-                                        {isPending ? <Loading /> : "Register"}
+                                        {isPending ? <Loadingcircle /> : "Register"}
                                    </span>
                                    <AiOutlineSwapRight className="icon" />
                               </button>

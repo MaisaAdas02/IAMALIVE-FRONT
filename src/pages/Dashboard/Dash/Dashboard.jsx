@@ -142,33 +142,33 @@ function Dashboard(props) {
             }}
         >
             <Toolbar />
-            <Divider />
+            
             <Box sx={{ flexGrow: 1 }}>
                 <List>
                     {menuItems.map((item) => (
                         <ListItem key={item.text} disablePadding>
                             <ListItemButton component={Link} to={item.path}>
                                 <ListItemIcon
-                                // sx={{ color: "white" }}
+                                    sx={{ color: "white" }}
                                 >
                                     {item.icon}
                                 </ListItemIcon>
                                 <ListItemText
                                     primary={item.text}
-                                    // sx={{ color: "white" }}
+                                    sx={{ color: "white" }}
                                 />
                             </ListItemButton>
                         </ListItem>
                     ))}
                 </List>
             </Box>
-            <Divider />
-            <Box sx={{ p: 2 }}>
+            
+            <Box sx={{backgroundColor:'#00000061', p: 2 }}>
                 <Button
                     variant="contained"
                     sx={{
-                        backgroundColor: "black",
-                        color: "#c75151",
+                        backgroundColor: "#c75151",
+                        color: "white",
                         "&:hover": {
                             backgroundColor: "#b04141",
                             color: "black",
