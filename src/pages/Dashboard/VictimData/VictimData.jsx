@@ -35,17 +35,18 @@ const VictimData = () => {
 
     const deleteDeadMutation = useMutation({
         mutationFn: async () => {
-            await axios.delete(`/rescueTeam/deadVictims`, {
+            const { data } = await axios.delete(`/rescueTeam/deadVictims`, {
                 headers: {
                     Authorization: `IAMALIVE__${token}`,
                 },
             });
+            return data;
         },
-        onSuccess: () => {
+        onSuccess: ({ message }) => {
             queryClient.invalidateQueries({
                 queryKey: ["victimsdata"],
             });
-            toast.success("Dead Users Deleted!");
+            toast.success(message || "Dead Users Deleted!");
         },
     });
 
@@ -60,7 +61,7 @@ const VictimData = () => {
                 },
                 {
                     label: "Cancel",
-                    onClick: () => { },
+                    onClick: () => {},
                 },
             ],
             overlayClassName: "overlay-custom",

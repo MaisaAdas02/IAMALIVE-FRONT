@@ -17,75 +17,86 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import UserProvider from "./context/UserProvider";
 import AdminRescueTeamRequests from "./pages/Dashboard/RescueRequests/AdminRescueTeamRequests";
 import SendCode from "./pages/SendCode/SendCode";
+import { ProtectedRoutes, PublicRoutes } from "./routes/Routes";
 
 // lets create a router
 const router = createBrowserRouter([
-     {
-          path: "dashboard",
-          element: <Dashboard />,
-          children: [
-               {
-                    path: "",
-                    element: <Profile />,
-               },
-               {
-                    path: "victimData",
-                    element: <VictimData />,
-               },
-               {
-                    path: "map",
-                    element: <Map />,
-               },
-               {
-                    path: "requests",
-                    element: <Requests />,
-               },
-               {
-                    path: "rescue-requests",
-                    element: <AdminRescueTeamRequests />,
-               },
-          ],
-     },
-     {
-          path: "/",
-          element: <Login />,
-     },
-     {
-          path: "register",
-          element: <Register />,
-     },
-     {
-          path: "sendcode",
-          element: <SendCode />,
-     },
+    {
+        path: "/dashboard",
+        element: (
+            <ProtectedRoutes>
+                <Dashboard />
+            </ProtectedRoutes>
+        ),
+        children: [
+            {
+                index: true,
+                element: <Profile />,
+            },
+            {
+                path: "victimData",
+                element: <VictimData />,
+            },
+            {
+                path: "map",
+                element: <Map />,
+            },
+            {
+                path: "requests",
+                element: <Requests />,
+            },
+            {
+                path: "rescue-requests",
+                element: <AdminRescueTeamRequests />,
+            },
+        ],
+    },
+    {
+        path: "/",
+        element: <PublicRoutes />,
+        children: [
+            {
+                index: true,
+                element: <Login />,
+            },
+            {
+                path: "register",
+                element: <Register />,
+            },
+        ],
+    },
+    {
+        path: "/sendcode",
+        element: <SendCode />,
+    },
 ]);
 
 const queryClient = new QueryClient({
-     defaultOptions: {
-          mutations: {
-               onError: (e) =>
-                    toast.error(
-                         e.response.data.message || "Something went wrong!!"
-                    ),
-          },
-          queries: {
-               refetchOnWindowFocus: false,
-               retry: false,
-          },
-     },
+    defaultOptions: {
+        mutations: {
+            onError: (e) =>
+                toast.error(
+                    e.response.data.message || "Something went wrong!!"
+                ),
+        },
+        queries: {
+            refetchOnWindowFocus: false,
+            retry: false,
+        },
+    },
 });
 
 function App() {
-     return (
-          <div>
-               <Toaster position="top-center" richColors />
-               <QueryClientProvider client={queryClient}>
-                    <UserProvider>
-                         <RouterProvider router={router} />
-                    </UserProvider>
-               </QueryClientProvider>
-          </div>
-     );
+    return (
+        <div>
+            <Toaster position="top-center" richColors />
+            <QueryClientProvider client={queryClient}>
+                <UserProvider>
+                    <RouterProvider router={router} />
+                </UserProvider>
+            </QueryClientProvider>
+        </div>
+    );
 }
 
 export default App;
