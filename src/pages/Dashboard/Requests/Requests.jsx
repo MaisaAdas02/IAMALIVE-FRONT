@@ -6,7 +6,8 @@ import Loading from "../../../Components/Loading/Loading";
 import { toast } from "sonner";
 import StatusColor from "../../../Components/StatusColor/StatusColor";
 import HeartRate from "../../../Components/HeartRate/HeartRate";
-
+import Loadingcircle from "../../../Components/Loadingcircle/Loadingcircle";
+import './Requests.css';
 function Requests() {
     const { token } = useContext(UserContext);
     const [currentPage, setCurrentPage] = useState(1);
@@ -35,17 +36,16 @@ function Requests() {
         toast.error(error.response.data.message || "Error !");
     }
 
-    if (sosvictims && sosvictims.length == 0) {
-        return <p>No Victim Requsts!</p>;
+    if (sosvictims && sosvictims.length === 0) {
+        return <p>No Victim Requests!</p>;
     }
 
     // Pagination logic
     const totalPages = Math.ceil(sosvictims.length / itemsPerPage);
-    const currentRequests =
-        sosvictims.slice(
-            (currentPage - 1) * itemsPerPage,
-            currentPage * itemsPerPage
-        ) || [];
+    const currentRequests = sosvictims.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     return (
         <div className="sosvictims-data">
@@ -75,9 +75,7 @@ function Requests() {
             </div>
             <div className="pagination">
                 <button
-                    onClick={() =>
-                        setCurrentPage((prev) => Math.max(prev - 1, 1))
-                    }
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
                 >
                     Previous
@@ -86,9 +84,7 @@ function Requests() {
                     Page {currentPage} of {totalPages}
                 </span>
                 <button
-                    onClick={() =>
-                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                    }
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
                 >
                     Next
@@ -119,12 +115,8 @@ const RequestRow = ({ req }) => {
             return data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["sos-data"],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ["victimsdata"],
-            });
+            queryClient.invalidateQueries({ queryKey: ["sos-data"] });
+            queryClient.invalidateQueries({ queryKey: ["victimsdata"] });
             toast.success("Status updated successfully");
         },
     });
@@ -135,21 +127,23 @@ const RequestRow = ({ req }) => {
             userId: req._id,
         });
     };
+
     return (
         <tr>
             <td>
-                <p>{req.name}</p>
+                <span className="cell-header">Name:</span> {req.name}
             </td>
             <td>
-                <p>{req.city}</p>
+                <span className="cell-header">City:</span> {req.city}
             </td>
             <td>
-                <p>{req.location ? req.location.longitude : "N/A"}</p>
+                <span className="cell-header">Longitude:</span> {req.location ? req.location.longitude : "N/A"}
             </td>
             <td>
-                <p>{req.location ? req.location.latitude : "N/A"}</p>
+                <span className="cell-header">Latitude:</span> {req.location ? req.location.latitude : "N/A"}
             </td>
             <td>
+                <span className="cell-header">HeartRate:</span>
                 {req.heartRate !== 0 ? (
                     <HeartRate value={req.heartRate} />
                 ) : (
@@ -157,11 +151,12 @@ const RequestRow = ({ req }) => {
                 )}
             </td>
             <td>
-                <StatusColor status={req.status} />
+                <span className="cell-header">Status:</span> <StatusColor status={req.status} />
             </td>
             <td>
+                <span className="cell-header">Actions:</span>
                 {changeStatusMutation.isPending ? (
-                    <Loading color="black" size={20} />
+                    <Loadingcircle color="black" size={20} />
                 ) : (
                     <select className="custom-select" value={req.status} onChange={handleChangeStatus}>
                         <option value="danger">Danger</option>

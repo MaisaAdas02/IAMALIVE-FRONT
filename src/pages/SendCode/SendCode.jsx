@@ -100,7 +100,8 @@ const SendCode = () => {
                                 <Loadingcircle color="black" size={20} />
                             ) : (
                                 "Submit"
-                            )}
+                            )} 
+                            
                         </button>
                     </form>
                 </>

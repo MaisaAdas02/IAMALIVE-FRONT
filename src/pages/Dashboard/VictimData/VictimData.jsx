@@ -61,7 +61,7 @@ const VictimData = () => {
                 },
                 {
                     label: "Cancel",
-                    onClick: () => {},
+                    onClick: () => { },
                 },
             ],
             overlayClassName: "overlay-custom",
@@ -114,26 +114,20 @@ const VictimData = () => {
                         {currentRequests.map((req) => (
                             <tr key={req._id}>
                                 <td>
-                                    <p>{req.name}</p>
+                                    <span className="cell-header">Name:</span> {req.name}
                                 </td>
                                 <td>
-                                    <p>{req.city}</p>
+                                    <span className="cell-header">City:</span> {req.city}
                                 </td>
                                 <td>
-                                    <p>
-                                        {req.location
-                                            ? req.location.longitude
-                                            : "N/A"}
-                                    </p>
+                                    <span className="cell-header">Longitude:</span> {req.location ? req.location.longitude : "N/A"}
+
+
                                 </td>
                                 <td>
-                                    <p>
-                                        {req.location
-                                            ? req.location.latitude
-                                            : "N/A"}
-                                    </p>
+                                    <span className="cell-header">Latitude:</span> {req.location ? req.location.latitude : "N/A"}
                                 </td>
-                                <td>
+                                <td> <span className="cell-header">HeartRate:</span>
                                     {req.heartRate !== 0 ? (
                                         <HeartRate value={req.heartRate} />
                                     ) : (
@@ -141,7 +135,7 @@ const VictimData = () => {
                                     )}
                                 </td>
                                 <td>
-                                    <StatusColor status={req.status} />
+                                    <span className="cell-header">Status:</span> <StatusColor status={req.status} />
                                 </td>
                             </tr>
                         ))}

@@ -5,7 +5,8 @@ import { UserContext } from '../../../context/UserProvider';
 import Loading from '../../../Components/Loading/Loading';
 import { toast } from 'sonner';
 import './AdminRescueTeamRequests.css';
-
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 const AdminRescueTeamRequests = () => {
     const { token } = useContext(UserContext);
     const queryClient = useQueryClient();
@@ -71,6 +72,29 @@ const AdminRescueTeamRequests = () => {
 
     });
 
+
+    const handleDelete = (userId) => {
+        confirmAlert({
+            title: 'Confirm to submit',
+            message: 'Are you sure you want to delete this request?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => deleteMutation.mutate(userId)
+                },
+                {
+                    label: 'No',
+                    onClick: () => { }
+                }
+            ],
+            overlayClassName: "overlay-custom",
+            closeOnClickOutside: true,
+            closeOnEscape: true,
+        });
+    };
+
+
+
     if (isLoading) {
         return <Loading size={30} color="black" />;
     }
@@ -102,9 +126,9 @@ const AdminRescueTeamRequests = () => {
                     <tbody>
                         {currentRequests.map(req => (
                             <tr key={req._id}>
-                                <td><p>{req.name}</p></td>
-                                <td><p>{req.email}</p></td>
-                                <td><p>{req.city}</p></td>
+                                <td> <span className="cell-header">Name:</span> {req.name}</td>
+                                <td><span className="cell-header">Email:</span> {req.email}</td>
+                                <td><span className="cell-header">City:</span> {req.city}</td>
                                 <td className='actionbuttons'>
                                     <button
                                         className='accept'
@@ -114,7 +138,7 @@ const AdminRescueTeamRequests = () => {
                                         {acceptMutation.isPending ? "Loading..." : "Accept"}
                                     </button>
                                     <button className='delete'
-                                        onClick={() => deleteMutation.mutate(req._id)}
+                                        onClick={() => handleDelete(req._id)}
                                         disabled={deleteMutation.isPending}
                                     >
                                         {deleteMutation.isPending ? "Loading..." : "Delete"}

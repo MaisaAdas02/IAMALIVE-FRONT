@@ -1,0 +1,74 @@
+/* Add this CSS in your CSS file */
+/*table {
+    font-family: Arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ddd;
+}*/
+
+tr {
+    border-bottom: 1px solid #ccc;
+}
+
+
+th,
+td {
+    text-align: left;
+    padding: 8px;
+    white-space: nowrap;
+}
+
+
+
+.cell-header {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    th {
+        display: none;
+    }
+
+    tr:nth-child(even) {
+        background-color: #efa7a744;
+    }
+
+    .cell-header {
+        display: block;
+        font-weight: bold;
+    }
+
+    td {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    p {
+        max-width: 50px;
+    }
+}
+
+.custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #f3ecec82;
+    border: 1px solid #c75151;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1rem;
+    color: #333;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+}
+
+.custom-select:focus {
+    outline: none;
+    border-color: #c75151;
+    background-color: rgba(199, 81, 81, 0.063);
+}
+
+.custom-select option {
+    background-color: #fff;
+    color: #333;
+}

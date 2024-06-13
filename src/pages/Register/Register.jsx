@@ -100,8 +100,7 @@ const Register = () => {
                     <div className="videoDiv">
                          <video src={video} autoPlay muted loop></video>
                          <div className="textDiv">
-                              <h2 className="title">I AM ALIVE</h2>
-                              <p>Is this peace! So why peace!</p>
+                              <h2 className="title">I Am Alive</h2>
                          </div>
 
                          <div className="footerDiv flex">

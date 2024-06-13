@@ -5,7 +5,7 @@
     align-items: center;
 
     p {
-        min-width: 100px;
+        
         text-transform: capitalize;
     }
 
@@ -17,15 +17,15 @@
     z-index: 1;
     font-size: 15px;
     /* Adjust as needed */
-    margin-right: 10px;
+    
     /* Space between text and animation */
 }
 
 /* Heart beat loader */
 .heartbeatloader {
     position: relative;
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
