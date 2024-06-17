@@ -41,6 +41,7 @@ td {
     td {
         display: flex;
         justify-content: space-between;
+        
     }
 
     p {

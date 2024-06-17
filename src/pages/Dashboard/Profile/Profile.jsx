@@ -1,14 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../../context/UserProvider";
-import { Tabs, Tab, Box, Typography } from '@mui/material';
+import { Tabs, Tab, Box } from '@mui/material';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Loading from "../../../Components/Loading/Loading";
 import './Profile.css';
 import { toast } from "sonner";
+import nouser from '../../../assets/nouser.png';
 
 export default function Profile() {
     const [tabIndex, setTabIndex] = useState(0);
+    const [userImage, setUserImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(nouser);
 
     const handleTabChange = (event, newIndex) => {
         setTabIndex(newIndex);
@@ -27,6 +30,12 @@ export default function Profile() {
         cNewPassword: '',
     });
 
+    useEffect(() => {
+        if (user.image) {
+            setImagePreview(user.image);
+        }
+    }, [user]);
+
     const handleChange = (e) => {
         const { value, name } = e.target;
         setFormInfo((prev) => ({
@@ -35,7 +44,7 @@ export default function Profile() {
         }));
     };
 
-    const handlePaswwordChange = (e) => {
+    const handlePasswordChange = (e) => {
         const { value, name } = e.target;
         setUpdatePassword((prev) => ({
             ...prev,
@@ -44,16 +53,14 @@ export default function Profile() {
     };
 
     const updateProfileMutation = useMutation({
-        mutationFn: async () => {
+        mutationFn: async (formData) => {
             const { data } = await axios.put(
                 "/rescueTeam/updateInfo",
-                {
-                    name: formInfo.name,
-                    city: formInfo.city,
-                },
+                formData,
                 {
                     headers: {
                         Authorization: `IAMALIVE__${token}`,
+                        'Content-Type': 'multipart/form-data'
                     },
                 }
             );
@@ -67,9 +74,14 @@ export default function Profile() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        updateProfileMutation.mutate();
+        const formData = new FormData();
+        formData.append('name', formInfo.name);
+        formData.append('city', formInfo.city);
+        if (userImage) {
+            formData.append('image', userImage);
+        }
+        updateProfileMutation.mutate(formData);
     };
-
 
     const updatePasswordMutation = useMutation({
         mutationFn: async () => {
@@ -79,7 +91,6 @@ export default function Profile() {
                     oldPassword: updatePassword.oldPassword,
                     newPassword: updatePassword.newPassword,
                     cNewPassword: updatePassword.cNewPassword
-
                 },
                 {
                     headers: {
@@ -96,12 +107,12 @@ export default function Profile() {
     });
 
     function handleSubmit1(e) {
-        e.preventDefault()
+        e.preventDefault();
         if (updatePassword.newPassword !== updatePassword.cNewPassword) {
             toast.error("New password and confirm password do not match");
             return;
         }
-        updatePasswordMutation.mutate()
+        updatePasswordMutation.mutate();
     }
 
     return (
@@ -126,6 +137,20 @@ export default function Profile() {
             <TabPanel value={tabIndex} index={0}>
                 <Box>
                     <form className="formInfo" onSubmit={handleSubmit}>
+                        <div className="profileImage" 
+                        onClick={()=>{
+                            const input = document.createElement('input');
+                            input.type = 'file';
+                            input.accept = 'image/*';
+                            input.onchange = (event) => {
+                                const file = event.target.files[0];
+                                setUserImage(file);
+                                setImagePreview(URL.createObjectURL(file));
+                            };
+                            input.click();
+                        }}>
+                            <img src={imagePreview} alt="userimage" />
+                        </div>
                         <div className="inputBox">
                             <label>
                                 <span>Name</span>
@@ -177,8 +202,8 @@ export default function Profile() {
                             <label>
                                 <span>Enter Old Password</span>
                                 <input
-                                    type="pasword"
-                                    onChange={handlePaswwordChange}
+                                    type="password"
+                                    onChange={handlePasswordChange}
                                     name="oldPassword"
                                 />
                             </label>
@@ -189,7 +214,7 @@ export default function Profile() {
                                 <input
                                     type="password"
                                     name="newPassword"
-                                    onChange={handlePaswwordChange}
+                                    onChange={handlePasswordChange}
                                 />
                             </label>
                         </div>
@@ -199,7 +224,7 @@ export default function Profile() {
                                 <input
                                     type="password"
                                     name="cNewPassword"
-                                    onChange={handlePaswwordChange}
+                                    onChange={handlePasswordChange}
                                 />
                             </label>
                         </div>
@@ -236,4 +261,3 @@ function TabPanel(props) {
         </div>
     );
 }
-

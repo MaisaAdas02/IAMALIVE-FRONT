@@ -9,6 +9,16 @@
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 8px rgba(204, 89, 89, 0.544);
 
+    .profileImage {
+
+        img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    }
+
 }
 
 /* Input box style */

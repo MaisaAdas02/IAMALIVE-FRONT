@@ -161,7 +161,7 @@ const RequestRow = ({ req }) => {
                     <select className="custom-select" value={req.status} onChange={handleChangeStatus}>
                         <option value="danger">Danger</option>
                         <option value="inProgress">InProgress</option>
-                        <option value="normal">Normal</option>
+                        <option value="safe">Safe</option>
                     </select>
                 )}
             </td>

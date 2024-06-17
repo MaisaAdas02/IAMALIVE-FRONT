@@ -7,29 +7,32 @@ import { toast } from 'sonner';
 import './AdminRescueTeamRequests.css';
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+
 const AdminRescueTeamRequests = () => {
     const { token } = useContext(UserContext);
     const queryClient = useQueryClient();
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
+    const fetchRequests = async () => {
+        const { data } = await axios.get(
+            `/rescueTeam/pendingRescueTeams`,
+            {
+                headers: {
+                    Authorization: `IAMALIVE__${token}`,
+                },
+            }
+        );
+        return data.pendingRescueTeams || [];
+    };
+
     const {
-        data: requests,
+        data: requests = [],
         isLoading,
         error,
     } = useQuery({
         queryKey: ['user-requests'],
-        queryFn: async () => {
-            const { data } = await axios.get(
-                `/rescueTeam/pendingRescueTeams`,
-                {
-                    headers: {
-                        Authorization: `IAMALIVE__${token}`,
-                    },
-                }
-            );
-            return data.pendingRescueTeams;
-        },
+        queryFn: fetchRequests,
     });
 
     const acceptMutation = useMutation({
@@ -69,9 +72,7 @@ const AdminRescueTeamRequests = () => {
             });
             toast.success("Request Deleted!");
         },
-
     });
-
 
     const handleDelete = (userId) => {
         confirmAlert({
@@ -93,17 +94,15 @@ const AdminRescueTeamRequests = () => {
         });
     };
 
-
-
     if (isLoading) {
         return <Loading size={30} color="black" />;
     }
-    if (requests && requests.length === 0) {
-        return <p>No requests found</p>;
-    }
     if (error) {
-        toast.error(error.response.data.message || "Error!");
+        toast.error(error.response?.data?.message || error.message || "Error!");
         return null; // Return null to prevent further rendering
+    }
+    if (requests.length === 0) {
+        return <p>No requests found</p>;
     }
 
     // Pagination logic
@@ -133,15 +132,15 @@ const AdminRescueTeamRequests = () => {
                                     <button
                                         className='accept'
                                         onClick={() => acceptMutation.mutate(req._id)}
-                                        disabled={acceptMutation.isPending}
+                                        disabled={acceptMutation.isLoading}
                                     >
-                                        {acceptMutation.isPending ? "Loading..." : "Accept"}
+                                        {acceptMutation.isLoading ? "Loading..." : "Accept"}
                                     </button>
                                     <button className='delete'
                                         onClick={() => handleDelete(req._id)}
-                                        disabled={deleteMutation.isPending}
+                                        disabled={deleteMutation.isLoading}
                                     >
-                                        {deleteMutation.isPending ? "Loading..." : "Delete"}
+                                        {deleteMutation.isLoading ? "Loading..." : "Delete"}
                                     </button>
                                 </td>
                             </tr>
