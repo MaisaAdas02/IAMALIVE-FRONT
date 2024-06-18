@@ -82,3 +82,10 @@
 .updateButton .loading {
     vertical-align: middle;
 }
+.profileAvatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover; /* Ensures the image covers the div without stretching */
+    cursor: pointer; /* If you want it to look clickable */
+}

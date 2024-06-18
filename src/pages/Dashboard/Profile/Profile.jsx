@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../../../context/UserProvider";
 import { Tabs, Tab, Box } from '@mui/material';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -6,35 +6,30 @@ import axios from "axios";
 import Loading from "../../../Components/Loading/Loading";
 import './Profile.css';
 import { toast } from "sonner";
-import nouser from '../../../assets/nouser.png';
 
 export default function Profile() {
     const [tabIndex, setTabIndex] = useState(0);
-    const [userImage, setUserImage] = useState(null);
-    const [imagePreview, setImagePreview] = useState(nouser);
-
-    const handleTabChange = (event, newIndex) => {
-        setTabIndex(newIndex);
-    };
-
-    const { user, token } = useContext(UserContext);
+    const { user, token, setUser } = useContext(UserContext);
     const queryClient = useQueryClient();
+
     const [formInfo, setFormInfo] = useState({
         name: user.name,
         email: user.email,
         city: user.city,
     });
+
     const [updatePassword, setUpdatePassword] = useState({
         oldPassword: '',
         newPassword: '',
         cNewPassword: '',
     });
 
-    useEffect(() => {
-        if (user.image) {
-            setImagePreview(user.image);
-        }
-    }, [user]);
+    const [profilePhoto, setProfilePhoto] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(user.profileImage ? user.profileImage.secure_url : "nouser.png");
+
+    const handleTabChange = (event, newIndex) => {
+        setTabIndex(newIndex);
+    };
 
     const handleChange = (e) => {
         const { value, name } = e.target;
@@ -52,35 +47,68 @@ export default function Profile() {
         }));
     };
 
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        setProfilePhoto(file);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setPreviewUrl(reader.result);
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            setPreviewUrl(user.profileImage ? user.profileImage.secure_url : '../../../assets/nouser.png');
+        }
+    };
+
+    const handleAvatarClick = () => {
+        document.getElementById('fileInput').click();
+    };
+
     const updateProfileMutation = useMutation({
-        mutationFn: async (formData) => {
+        mutationFn: async () => {
+            const formData = new FormData();
+            formData.append('name', formInfo.name);
+            formData.append('city', formInfo.city);
+            if (profilePhoto) {
+                formData.append('image', profilePhoto);
+            }
+
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `IAMALIVE__${token}`,
+                },
+            };
+
             const { data } = await axios.put(
                 "/rescueTeam/updateInfo",
                 formData,
-                {
-                    headers: {
-                        Authorization: `IAMALIVE__${token}`,
-                        'Content-Type': 'multipart/form-data'
-                    },
-                }
+                config
             );
+
             return data;
         },
-        onSuccess: () => {
+        onError: (error) => {
+            console.error("Error updating profile:", error.response || error.message);
+            toast.error("Failed to update profile. Please try again.");
+        },
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["current-user"] });
+            setUser((prevUser) => ({
+                ...prevUser,
+                name: formInfo.name,
+                city: formInfo.city,
+                profileImage: data.rescueTeam.profileImage || prevUser.profileImage,
+            }));
             toast.success("Profile updated successfully");
         },
     });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('name', formInfo.name);
-        formData.append('city', formInfo.city);
-        if (userImage) {
-            formData.append('image', userImage);
-        }
-        updateProfileMutation.mutate(formData);
+        updateProfileMutation.mutate();
     };
 
     const updatePasswordMutation = useMutation({
@@ -100,6 +128,10 @@ export default function Profile() {
             );
             return data;
         },
+        onError: (error) => {
+            console.error("Error updating password:", error.response || error.message);
+            toast.error("Failed to update password. Please try again.");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["current-user"] });
             toast.success("Password Reset successfully!");
@@ -107,12 +139,12 @@ export default function Profile() {
     });
 
     function handleSubmit1(e) {
-        e.preventDefault();
+        e.preventDefault()
         if (updatePassword.newPassword !== updatePassword.cNewPassword) {
             toast.error("New password and confirm password do not match");
             return;
         }
-        updatePasswordMutation.mutate();
+        updatePasswordMutation.mutate()
     }
 
     return (
@@ -136,21 +168,18 @@ export default function Profile() {
             </Box>
             <TabPanel value={tabIndex} index={0}>
                 <Box>
+
                     <form className="formInfo" onSubmit={handleSubmit}>
-                        <div className="profileImage" 
-                        onClick={()=>{
-                            const input = document.createElement('input');
-                            input.type = 'file';
-                            input.accept = 'image/*';
-                            input.onchange = (event) => {
-                                const file = event.target.files[0];
-                                setUserImage(file);
-                                setImagePreview(URL.createObjectURL(file));
-                            };
-                            input.click();
-                        }}>
-                            <img src={imagePreview} alt="userimage" />
+                        <div className="avatarBox" onClick={handleAvatarClick}>
+                            <img src={previewUrl} alt="Profile Avatar" className="profileAvatar"  />
                         </div>
+                        <input
+                            type="file"
+                            id="fileInput"
+                            accept="image/*"
+                            onChange={handlePhotoChange}
+                            style={{ display: "none" }}
+                        />
                         <div className="inputBox">
                             <label>
                                 <span>Name</span>
@@ -184,7 +213,6 @@ export default function Profile() {
                                 />
                             </label>
                         </div>
-
                         <button className="updateButton" type="submit">
                             {updateProfileMutation.isPending ? (
                                 <Loading color="black" size={20} />
