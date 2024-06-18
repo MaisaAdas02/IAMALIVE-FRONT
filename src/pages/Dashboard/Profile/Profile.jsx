@@ -3,7 +3,7 @@ import { UserContext } from "../../../context/UserProvider";
 import { Tabs, Tab, Box } from '@mui/material';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import Loading from "../../../Components/Loading/Loading";
+import Loadingcircle from "../../../Components/Loadingcircle/Loadingcircle";
 import './Profile.css';
 import { toast } from "sonner";
 
@@ -25,7 +25,7 @@ export default function Profile() {
     });
 
     const [profilePhoto, setProfilePhoto] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState(user.profileImage ? user.profileImage.secure_url : "nouser.png");
+    const [previewUrl, setPreviewUrl] = useState(user.profileImage ? user.profileImage.secure_url : "../../../assets/nouser.png");
 
     const handleTabChange = (event, newIndex) => {
         setTabIndex(newIndex);
@@ -58,7 +58,7 @@ export default function Profile() {
         if (file) {
             reader.readAsDataURL(file);
         } else {
-            setPreviewUrl(user.profileImage ? user.profileImage.secure_url : '../../../assets/nouser.png');
+            setPreviewUrl('../../../assets/nouser.png');
         }
     };
 
@@ -171,7 +171,9 @@ export default function Profile() {
 
                     <form className="formInfo" onSubmit={handleSubmit}>
                         <div className="avatarBox" onClick={handleAvatarClick}>
-                            <img src={previewUrl} alt="Profile Avatar" className="profileAvatar"  />
+                            <img src={previewUrl} alt="Profile Avatar" className="profileAvatar"
+                            onError={() => setPreviewUrl("../../../assets/nouser.png")} // Set default image on error
+                            style={{ width: "100px", height: "100px", borderRadius: "50%" }}  />
                         </div>
                         <input
                             type="file"
@@ -215,7 +217,7 @@ export default function Profile() {
                         </div>
                         <button className="updateButton" type="submit">
                             {updateProfileMutation.isPending ? (
-                                <Loading color="black" size={20} />
+                                <Loadingcircle color="black" size={20} />
                             ) : (
                                 "Update"
                             )}
@@ -258,7 +260,7 @@ export default function Profile() {
                         </div>
                         <button className="updateButton" type="submit">
                             {updatePasswordMutation.isPending ? (
-                                <Loading color="black" size={20} />
+                                <Loadingcircle color="black" size={20} />
                             ) : (
                                 "Reset Password"
                             )}
