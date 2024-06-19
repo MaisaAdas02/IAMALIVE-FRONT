@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: rgba(204, 89, 89, 0.3);
+    
 }
 
 .sendEmail, .resetpassword {
@@ -21,6 +21,12 @@
     background-color: #f3ecec82;
     width: 90%; /* Default to 90% width for better responsiveness */
     max-width: 500px; /* Limit the maximum width */
+
+    img{
+        width: 20%;
+        height: 30%;
+        margin-bottom: 20px;
+    }
 }
 
 .sendEmail h1, .resetpassword h2 {

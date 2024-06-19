@@ -19,7 +19,7 @@ const Map = () => {
 
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const center = { lat: 32.303485, lng: 35.035594 }; // Coordinates for Azbat AlJarrad city
+    const center = { lat: 32.303485, lng: 35.035594 };
     const [zoom] = useState(12);
 
     var defaultIcon = new L.Icon({

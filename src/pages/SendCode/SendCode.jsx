@@ -6,6 +6,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import Loadingcircle from "../../Components/Loadingcircle/Loadingcircle";
+import logo from "../../assets/iamalive.png";
 
 const SendCode = () => {
     const navigate = useNavigate()
@@ -59,7 +60,8 @@ const SendCode = () => {
         <div className="pageContainer">
             {!showForgetForm && (
                 <form className="sendEmail" onSubmit={handleSubmit1}>
-                    <h1>Enter your email</h1>
+                        <img src={logo} alt="Logo Image" />
+                        <h1>Enter your email</h1>
                     <input
                         type="email"
                         onChange={(e) => setEmail(e.target.value)}
@@ -81,12 +83,13 @@ const SendCode = () => {
                 <>
                     
                     <form className="resetpassword" onSubmit={handleSubmit2}>
+                    <img src={logo} alt="Logo Image" />
                         <h2>Enter the code & new password</h2>
                         <input
                             type="text"
                             onChange={(e) => setForgetData(prev => ({ ...prev, code: e.target.value }))}
                             value={forgetData.code}
-                            placeholder="ABCD"
+                            placeholder="code"
                         />
                         <input
                             type="password"

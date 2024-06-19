@@ -10,7 +10,7 @@ const UserProvider = ({ children }) => {
     const [token, setToken] = useState(
         localStorage.token ? localStorage.token : ""
     );
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState(null);
 
     const { isLoading, error } = useQuery({
         queryKey: ["current-user"],

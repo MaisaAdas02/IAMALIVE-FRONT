@@ -429,6 +429,11 @@ video {
 .registerPage .container .formDiv img {
     width: 100px;
   }
+  td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 ::-webkit-scrollbar {
   display: none;

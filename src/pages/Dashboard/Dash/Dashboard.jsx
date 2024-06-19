@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
     AppBar,
@@ -36,7 +36,7 @@ import iamalive from "../../../assets/iamalive.png";
 import { UserContext } from "../../../context/UserProvider";
 
 const drawerWidth = 240;
-const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
 
 function MyApp() {
     const theme = useTheme();
@@ -93,6 +93,7 @@ function Dashboard(props) {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
     const navigate = useNavigate();
+    const { pathname } = useLocation()
 
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -113,22 +114,27 @@ function Dashboard(props) {
 
     const handleLogout = () => {
         setToken("");
-        setUser({});
+        setUser(null);
         navigate("/");
     };
 
     const menuItems = [
-        { text: "Profile", icon: <AccountCircleOutlinedIcon />, path: "" },
-        { text: "Victim Data", icon: <TableRowsIcon />, path: "victimData" },
-        { text: "Requests", icon: <TableRowsIcon />, path: "requests" },
-        { text: "Map", icon: <MapIcon />, path: "map" },
+        { text: "Profile", icon: <AccountCircleOutlinedIcon />, path: "/dashboard" },
+        { text: "Victim Data", icon: <TableRowsIcon />, path: "/dashboard/victimData" },
+        { text: "Requests", icon: <TableRowsIcon />, path: "/dashboard/requests" },
+        { text: "Map", icon: <MapIcon />, path: "/dashboard/map" },
     ];
 
     if (user && user.role === "SuperAdmin") {
         menuItems.push({
             text: "RescueTeam Requests",
             icon: <TableRowsIcon />,
-            path: "rescue-requests",
+            path: "/dashboard/rescue-requests",
+        })
+        menuItems.push({
+            text: "RescueTeam data",
+            icon: <TableRowsIcon />,
+            path: "/dashboard/rescue-data",
         });
     }
 
@@ -142,11 +148,13 @@ function Dashboard(props) {
             }}
         >
             <Toolbar />
-            
+
             <Box sx={{ flexGrow: 1 }}>
                 <List>
                     {menuItems.map((item) => (
-                        <ListItem key={item.text} disablePadding>
+                        <ListItem key={item.text} disablePadding sx={{
+                            background: pathname == item.path && "green"
+                        }}>
                             <ListItemButton component={Link} to={item.path}>
                                 <ListItemIcon
                                     sx={{ color: "white" }}
@@ -162,8 +170,8 @@ function Dashboard(props) {
                     ))}
                 </List>
             </Box>
-            
-            <Box sx={{backgroundColor:'#00000061', p: 2 }}>
+
+            <Box sx={{ backgroundColor: '#00000061', p: 2 }}>
                 <Button
                     variant="contained"
                     sx={{
@@ -209,7 +217,7 @@ function Dashboard(props) {
                         <MenuIcon />
                     </IconButton>
                     <Avatar
-                        src={iamalive}
+                        src={user && user.profileImage ? user.profileImage.secure_url : iamalive}
                         alt="Iamalive"
                         sx={{ mr: 2, width: 40, height: 40 }}
                     />

@@ -18,6 +18,7 @@ import UserProvider from "./context/UserProvider";
 import AdminRescueTeamRequests from "./pages/Dashboard/RescueRequests/AdminRescueTeamRequests";
 import SendCode from "./pages/SendCode/SendCode";
 import { ProtectedRoutes, PublicRoutes } from "./routes/Routes";
+import AdminRescueTeamData from "./pages/Dashboard/AdminRescueTeamData/AdminRescueTeamData";
 
 // lets create a router
 const router = createBrowserRouter([
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
             {
                 path: "rescue-requests",
                 element: <AdminRescueTeamRequests />,
+            },
+            {
+                path: "rescue-data",
+                element: <AdminRescueTeamData />,
             },
         ],
     },

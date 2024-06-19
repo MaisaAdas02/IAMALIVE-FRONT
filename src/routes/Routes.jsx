@@ -1,19 +1,18 @@
-import React, { useContext } from "react";
+import react, { useContext } from "react";
 import { UserContext } from "../context/UserProvider";
 import { Navigate, Outlet } from "react-router-dom";
+
 
 export const ProtectedRoutes = ({ children }) => {
     const { token } = useContext(UserContext);
     if (!token) {
-        return <Navigate to="/" />;
-    }
-    return children;
-};
+        return <Navigate to='/' />;
+    } return children;
+}
 
-export const PublicRoutes = () => {
+export const PublicRoutes = ({ children }) => {
     const { token } = useContext(UserContext);
     if (token) {
-        return <Navigate to="/dashboard" />;
-    }
-    return <Outlet />;
-};
+        return <Navigate to='/dashboard' />;
+    } return <Outlet />;
+}

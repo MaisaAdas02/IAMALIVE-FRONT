@@ -50,7 +50,7 @@ function Requests() {
     return (
         <div className="sosvictims-data">
             <div className="headerdiv">
-                <h2>SOSVictims Data</h2>
+                <h2> Victims Requests </h2>
             </div>
 
             <div className="table-wrapper">

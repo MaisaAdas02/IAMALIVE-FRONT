@@ -6,16 +6,18 @@ import axios from "axios";
 import Loadingcircle from "../../../Components/Loadingcircle/Loadingcircle";
 import './Profile.css';
 import { toast } from "sonner";
+import noUserImage from '../../../assets/nouser.png'
 
 export default function Profile() {
     const [tabIndex, setTabIndex] = useState(0);
-    const { user, token, setUser } = useContext(UserContext);
+    const { user, token } = useContext(UserContext);
     const queryClient = useQueryClient();
 
     const [formInfo, setFormInfo] = useState({
-        name: user.name,
-        email: user.email,
-        city: user.city,
+        name: "",
+        email: "",
+        city: "",
+        image: null
     });
 
     const [updatePassword, setUpdatePassword] = useState({
@@ -23,9 +25,6 @@ export default function Profile() {
         newPassword: '',
         cNewPassword: '',
     });
-
-    const [profilePhoto, setProfilePhoto] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState(user.profileImage ? user.profileImage.secure_url : "../../../assets/nouser.png");
 
     const handleTabChange = (event, newIndex) => {
         setTabIndex(newIndex);
@@ -48,33 +47,13 @@ export default function Profile() {
     };
 
     const handlePhotoChange = (e) => {
-        const file = e.target.files[0];
-        setProfilePhoto(file);
-
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setPreviewUrl(reader.result);
-        };
-        if (file) {
-            reader.readAsDataURL(file);
-        } else {
-            setPreviewUrl('../../../assets/nouser.png');
-        }
+        setFormInfo(prev => ({ ...prev, image: e.target.files[0] }))
     };
 
-    const handleAvatarClick = () => {
-        document.getElementById('fileInput').click();
-    };
+
 
     const updateProfileMutation = useMutation({
-        mutationFn: async () => {
-            const formData = new FormData();
-            formData.append('name', formInfo.name);
-            formData.append('city', formInfo.city);
-            if (profilePhoto) {
-                formData.append('image', profilePhoto);
-            }
-
+        mutationFn: async (formdata) => {
             const config = {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -84,31 +63,25 @@ export default function Profile() {
 
             const { data } = await axios.put(
                 "/rescueTeam/updateInfo",
-                formData,
+                formdata,
                 config
             );
 
             return data;
         },
-        onError: (error) => {
-            console.error("Error updating profile:", error.response || error.message);
-            toast.error("Failed to update profile. Please try again.");
-        },
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["current-user"] });
-            setUser((prevUser) => ({
-                ...prevUser,
-                name: formInfo.name,
-                city: formInfo.city,
-                profileImage: data.rescueTeam.profileImage || prevUser.profileImage,
-            }));
-            toast.success("Profile updated successfully");
+            toast.success("Profile updated successfully :)");
         },
     });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        updateProfileMutation.mutate();
+        const formdata = new FormData()
+        formInfo.name && formdata.append('name', formInfo.name)
+        formInfo.city && formdata.append('city', formInfo.city)
+        formInfo.image && formdata.append('image', formInfo.image)
+        updateProfileMutation.mutate(formdata);
     };
 
     const updatePasswordMutation = useMutation({
@@ -146,130 +119,149 @@ export default function Profile() {
         }
         updatePasswordMutation.mutate()
     }
-
-    return (
-        <>
-            <Box sx={{ borderBottom: 4, borderColor: '#c75151' }}>
-                <Tabs value={tabIndex} onChange={handleTabChange} aria-label="profile tabs"
-                    sx={{
-                        '& .MuiTabs-indicator': {
-                            backgroundColor: 'black', // Indicator color
-                        },
-                        '& .MuiTab-root': {
-                            color: 'rgba(199, 81, 81, 0.5)', // Inactive tab color
-                            '&.Mui-selected': {
-                                color: 'black', // Active tab color
+    if (user)
+        return (
+            <>
+                <Box sx={{ borderBottom: 4, borderColor: '#c75151' }}>
+                    <Tabs value={tabIndex} onChange={handleTabChange} aria-label="profile tabs"
+                        sx={{
+                            '& .MuiTabs-indicator': {
+                                backgroundColor: 'black', // Indicator color
                             },
-                        },
-                    }}>
-                    <Tab label="Profile" sx={{ color: 'black' }} />
-                    <Tab label="Update Password" sx={{ color: 'black' }} />
-                </Tabs>
-            </Box>
-            <TabPanel value={tabIndex} index={0}>
-                <Box>
+                            '& .MuiTab-root': {
+                                color: 'rgba(199, 81, 81, 0.5)', // Inactive tab color
+                                '&.Mui-selected': {
+                                    color: 'black', // Active tab color
+                                },
+                            },
+                        }}>
+                        <Tab label="Profile" sx={{ color: 'black' }} />
+                        <Tab label="Update Password" sx={{ color: 'black' }} />
+                    </Tabs>
+                </Box>
+                <TabPanel value={tabIndex} index={0}>
+                    <Box>
 
-                    <form className="formInfo" onSubmit={handleSubmit}>
-                        <div className="avatarBox" onClick={handleAvatarClick}>
-                            <img src={previewUrl} alt="Profile Avatar" className="profileAvatar"
-                            onError={() => setPreviewUrl("../../../assets/nouser.png")} // Set default image on error
-                            style={{ width: "100px", height: "100px", borderRadius: "50%" }}  />
-                        </div>
-                        <input
-                            type="file"
-                            id="fileInput"
-                            accept="image/*"
-                            onChange={handlePhotoChange}
-                            style={{ display: "none" }}
-                        />
-                        <div className="inputBox">
-                            <label>
-                                <span>Name</span>
+                        <form className="formInfo" onSubmit={handleSubmit}>
+                            <label style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <div className="image-wrapper">
+                                <img
+                                    src={
+                                        (user.profileImage?.secure_url && !formInfo.image) ? user.profileImage.secure_url : formInfo.image ? URL.createObjectURL(formInfo.image) : noUserImage
+                                    }
+                                    alt="img"
+                                    style={{
+                                        width: '200px',
+                                        aspectRatio: '1/1',
+                                        objectFit: 'cover',
+                                        objectPosition: "top",
+                                        borderRadius: "50%",
+                                        boxShadow: "1px 2px 6px 2px rgba(0, 0, 0, 0.2)",
+                                        marginBlock: "1rem"
+                                    }}
+                                />
+                                
+                                </div>
                                 <input
-                                    type="text"
-                                    defaultValue={formInfo.name}
-                                    onChange={handleChange}
-                                    name="name"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handlePhotoChange}
+                                    style={{ display: "none" }}
                                 />
                             </label>
-                        </div>
-                        <div className="inputBox">
-                            <label>
-                                <span>Email</span>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    disabled
-                                    defaultValue={formInfo.email}
-                                />
-                            </label>
-                        </div>
-                        <div className="inputBox">
-                            <label>
-                                <span>City</span>
-                                <input
-                                    type="text"
-                                    defaultValue={formInfo.city}
-                                    onChange={handleChange}
-                                    name="city"
-                                />
-                            </label>
-                        </div>
-                        <button className="updateButton" type="submit">
-                            {updateProfileMutation.isPending ? (
-                                <Loadingcircle color="black" size={20} />
-                            ) : (
-                                "Update"
-                            )}
-                        </button>
-                    </form>
-                </Box>
-            </TabPanel>
-            <TabPanel value={tabIndex} index={1}>
-                <Box>
-                    <form className="formInfo" onSubmit={handleSubmit1}>
-                        <div className="inputBox">
-                            <label>
-                                <span>Enter Old Password</span>
-                                <input
-                                    type="password"
-                                    onChange={handlePasswordChange}
-                                    name="oldPassword"
-                                />
-                            </label>
-                        </div>
-                        <div className="inputBox">
-                            <label>
-                                <span>Enter New Password</span>
-                                <input
-                                    type="password"
-                                    name="newPassword"
-                                    onChange={handlePasswordChange}
-                                />
-                            </label>
-                        </div>
-                        <div className="inputBox">
-                            <label>
-                                <span>Confirm Password</span>
-                                <input
-                                    type="password"
-                                    name="cNewPassword"
-                                    onChange={handlePasswordChange}
-                                />
-                            </label>
-                        </div>
-                        <button className="updateButton" type="submit">
-                            {updatePasswordMutation.isPending ? (
-                                <Loadingcircle color="black" size={20} />
-                            ) : (
-                                "Reset Password"
-                            )}
-                        </button>
-                    </form>
-                </Box>
-            </TabPanel>
-        </>
-    );
+
+
+
+
+
+                            <div className="inputBox">
+                                <label>
+                                    <span>Name</span>
+                                    <input
+                                        type="text"
+                                        defaultValue={user.name}
+                                        onChange={handleChange}
+                                        name="name"
+                                    />
+                                </label>
+                            </div>
+                            <div className="inputBox">
+                                <label>
+                                    <span>Email</span>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        disabled
+                                        defaultValue={user.email}
+                                    />
+                                </label>
+                            </div>
+                            <div className="inputBox">
+                                <label>
+                                    <span>City</span>
+                                    <input
+                                        type="text"
+                                        defaultValue={user.city}
+                                        onChange={handleChange}
+                                        name="city"
+                                    />
+                                </label>
+                            </div>
+                            <button className="updateButton" type="submit">
+                                {updateProfileMutation.isPending ? (
+                                    <Loadingcircle color="black" size={20} />
+                                ) : (
+                                    "Update"
+                                )}
+                            </button>
+                        </form>
+                    </Box>
+                </TabPanel>
+                <TabPanel value={tabIndex} index={1}>
+                    <Box>
+                        <form className="formInfo" onSubmit={handleSubmit1}>
+                            <div className="inputBox">
+                                <label>
+                                    <span>Enter Old Password</span>
+                                    <input
+                                        type="password"
+                                        onChange={handlePasswordChange}
+                                        name="oldPassword"
+                                    />
+                                </label>
+                            </div>
+                            <div className="inputBox">
+                                <label>
+                                    <span>Enter New Password</span>
+                                    <input
+                                        type="password"
+                                        name="newPassword"
+                                        onChange={handlePasswordChange}
+                                    />
+                                </label>
+                            </div>
+                            <div className="inputBox">
+                                <label>
+                                    <span>Confirm Password</span>
+                                    <input
+                                        type="password"
+                                        name="cNewPassword"
+                                        onChange={handlePasswordChange}
+                                    />
+                                </label>
+                            </div>
+                            <button className="updateButton" type="submit">
+                                {updatePasswordMutation.isPending ? (
+                                    <Loadingcircle color="black" size={20} />
+                                ) : (
+                                    "Reset Password"
+                                )}
+                            </button>
+                        </form>
+                    </Box>
+                </TabPanel>
+            </>
+        );
 }
 
 function TabPanel(props) {
