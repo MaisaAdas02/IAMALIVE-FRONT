@@ -30,6 +30,7 @@ import {
     Brightness4 as Brightness4Icon,
     Brightness7 as Brightness7Icon,
 } from "@mui/icons-material";
+
 import "./Dashboard.css";
 import "../../../App.css";
 import iamalive from "../../../assets/iamalive.png";
@@ -88,13 +89,15 @@ export default function ToggleColorMode() {
     );
 }
 
+
+
 function Dashboard(props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
     const navigate = useNavigate();
     const { pathname } = useLocation()
-
+   
     const handleDrawerClose = () => {
         setIsClosing(true);
         setMobileOpen(false);
@@ -153,7 +156,7 @@ function Dashboard(props) {
                 <List>
                     {menuItems.map((item) => (
                         <ListItem key={item.text} disablePadding sx={{
-                            background: pathname == item.path && "green"
+                            background: pathname == item.path && "#bd3333",
                         }}>
                             <ListItemButton component={Link} to={item.path}>
                                 <ListItemIcon

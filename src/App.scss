@@ -439,6 +439,12 @@ video {
             }
         }
     }
+
+    td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */

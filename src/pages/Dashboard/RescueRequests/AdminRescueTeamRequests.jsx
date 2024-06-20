@@ -12,7 +12,7 @@ const AdminRescueTeamRequests = () => {
     const { token } = useContext(UserContext);
     const queryClient = useQueryClient();
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8;
+    const itemsPerPage = 10;
 
     const fetchRequests = async () => {
         const { data } = await axios.get(
@@ -84,7 +84,7 @@ const AdminRescueTeamRequests = () => {
                     onClick: () => deleteMutation.mutate(userId)
                 },
                 {
-                    label: 'No',
+                    label: 'cancel',
                     onClick: () => { }
                 }
             ],
@@ -99,7 +99,7 @@ const AdminRescueTeamRequests = () => {
     }
     if (error) {
         toast.error(error.response?.data?.message || error.message || "Error!");
-        return null; // Return null to prevent further rendering
+        
     }
     if (requests.length === 0) {
         return <p>No requests found</p>;

@@ -15,7 +15,7 @@ const VictimData = () => {
     const { token } = useContext(UserContext);
     const queryClient = useQueryClient();
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8;
+    const itemsPerPage = 10;
 
     const {
         data: victims,
@@ -88,7 +88,7 @@ const VictimData = () => {
             (currentPage - 1) * itemsPerPage,
             currentPage * itemsPerPage
         ) || [];
-    console.log(currentRequests);
+    
     return (
         <div className="victims-data">
             <div className="headerdiv">
@@ -121,8 +121,6 @@ const VictimData = () => {
                                 </td>
                                 <td>
                                     <span className="cell-header">Longitude:</span> {req.location ? req.location.longitude : "N/A"}
-
-
                                 </td>
                                 <td>
                                     <span className="cell-header">Latitude:</span> {req.location ? req.location.latitude : "N/A"}

@@ -4,9 +4,10 @@ import { Tabs, Tab, Box } from '@mui/material';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Loadingcircle from "../../../Components/Loadingcircle/Loadingcircle";
-import './Profile.css';
 import { toast } from "sonner";
-import noUserImage from '../../../assets/nouser.png'
+import noUserImage from '../../../assets/nouser.png';
+import { MdAddAPhoto } from "react-icons/md";
+import './Profile.css';
 
 export default function Profile() {
     const [tabIndex, setTabIndex] = useState(0);
@@ -47,10 +48,8 @@ export default function Profile() {
     };
 
     const handlePhotoChange = (e) => {
-        setFormInfo(prev => ({ ...prev, image: e.target.files[0] }))
+        setFormInfo(prev => ({ ...prev, image: e.target.files[0] }));
     };
-
-
 
     const updateProfileMutation = useMutation({
         mutationFn: async (formdata) => {
@@ -73,14 +72,18 @@ export default function Profile() {
             queryClient.invalidateQueries({ queryKey: ["current-user"] });
             toast.success("Profile updated successfully :)");
         },
+        onError: (error) => {
+            console.error("Error updating profile:", error.response || error.message);
+            toast.error("Failed to update profile. Please try again.");
+        },
     });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formdata = new FormData()
-        formInfo.name && formdata.append('name', formInfo.name)
-        formInfo.city && formdata.append('city', formInfo.city)
-        formInfo.image && formdata.append('image', formInfo.image)
+        const formdata = new FormData();
+        formInfo.name && formdata.append('name', formInfo.name);
+        formInfo.city && formdata.append('city', formInfo.city);
+        formInfo.image && formdata.append('image', formInfo.image);
         updateProfileMutation.mutate(formdata);
     };
 
@@ -112,13 +115,14 @@ export default function Profile() {
     });
 
     function handleSubmit1(e) {
-        e.preventDefault()
+        e.preventDefault();
         if (updatePassword.newPassword !== updatePassword.cNewPassword) {
             toast.error("New password and confirm password do not match");
             return;
         }
-        updatePasswordMutation.mutate()
+        updatePasswordMutation.mutate();
     }
+
     if (user)
         return (
             <>
@@ -141,26 +145,38 @@ export default function Profile() {
                 </Box>
                 <TabPanel value={tabIndex} index={0}>
                     <Box>
-
                         <form className="formInfo" onSubmit={handleSubmit}>
                             <label style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                <div className="image-wrapper">
-                                <img
-                                    src={
-                                        (user.profileImage?.secure_url && !formInfo.image) ? user.profileImage.secure_url : formInfo.image ? URL.createObjectURL(formInfo.image) : noUserImage
-                                    }
-                                    alt="img"
-                                    style={{
-                                        width: '200px',
-                                        aspectRatio: '1/1',
-                                        objectFit: 'cover',
-                                        objectPosition: "top",
-                                        borderRadius: "50%",
-                                        boxShadow: "1px 2px 6px 2px rgba(0, 0, 0, 0.2)",
-                                        marginBlock: "1rem"
-                                    }}
-                                />
-                                
+                                <div className="image-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
+                                    <img
+                                        src={
+                                            (user.profileImage?.secure_url && !formInfo.image) ? user.profileImage.secure_url : formInfo.image ? URL.createObjectURL(formInfo.image) : noUserImage
+                                        }
+                                        alt="img"
+                                        style={{
+                                            width: '150px',
+                                            aspectRatio: '1/1',
+                                            objectFit: 'cover',
+                                            objectPosition: "top",
+                                            borderRadius: "50%",
+                                            boxShadow: "1px 2px 6px 2px rgba(0, 0, 0, 0.2)",
+                                            marginBlock: "1rem"
+                                        }}
+
+                                    />
+                                    <MdAddAPhoto
+                                        style={{
+                                            position: 'absolute',
+                                            bottom: '19px',
+                                            right: '30px',
+                                            backgroundColor: "gray",
+                                            padding:"5px",
+                                            width:"20%",
+                                            height:"15%",
+                                            borderRadius: '50%',
+                                            boxShadow: "1px 2px 6px 2px rgba(0, 0, 0, 0.2)",
+                                            color:"black"
+                                        }} />
                                 </div>
                                 <input
                                     type="file"
@@ -169,11 +185,6 @@ export default function Profile() {
                                     style={{ display: "none" }}
                                 />
                             </label>
-
-
-
-
-
                             <div className="inputBox">
                                 <label>
                                     <span>Name</span>
