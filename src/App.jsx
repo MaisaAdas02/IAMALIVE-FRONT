@@ -19,7 +19,7 @@ import AdminRescueTeamRequests from "./pages/Dashboard/RescueRequests/AdminRescu
 import SendCode from "./pages/SendCode/SendCode";
 import { ProtectedRoutes, PublicRoutes } from "./routes/Routes";
 import AdminRescueTeamData from "./pages/Dashboard/AdminRescueTeamData/AdminRescueTeamData";
-
+import {LocationProvider} from "./context/LocationContext";
 // lets create a router
 const router = createBrowserRouter([
     {
@@ -96,9 +96,11 @@ function App() {
         <div>
             <Toaster position="top-center" richColors />
             <QueryClientProvider client={queryClient}>
-                <UserProvider>
-                    <RouterProvider router={router} />
-                </UserProvider>
+            <LocationProvider> 
+                    <UserProvider>
+                        <RouterProvider router={router} />
+                    </UserProvider>
+                </LocationProvider>
             </QueryClientProvider>
         </div>
     );

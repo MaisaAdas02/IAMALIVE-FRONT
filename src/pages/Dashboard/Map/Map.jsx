@@ -1,5 +1,5 @@
 import "./Map.css";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "./Map.css";
@@ -8,9 +8,12 @@ import { useGetMapData } from "../../../hooks/use-maps";
 import Loading from "../../../Components/Loading/Loading";
 import { toast } from "sonner";
 
-import "./AccuratePosition";  // Assuming AccuratePosition.js is the file that contains the AccuratePosition code
+import "./AccuratePosition";
+import { LocationContext } from '../../../LocationContext'; // تأكد من تحديد المسار الصحيح
 
 const Map = () => {
+    const { location, setLocation } = useContext(LocationContext);
+
     const {
         data: victims,
         isLoading,
@@ -21,7 +24,7 @@ const Map = () => {
 
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const userMarker = useRef(null); // Reference for the user marker
+    const userMarker = useRef(null);
     const [zoom] = useState(12);
 
     var defaultIcon = new L.Icon({
@@ -50,49 +53,53 @@ const Map = () => {
     });
 
     useEffect(() => {
-        if (!mapContainer.current) return; // Ensure the container is mounted
+        if (!mapContainer.current) return;
 
         if (!map.current) {
             map.current = L.map(mapContainer.current, {
-                center: [32.303485, 35.035594], // Set an initial center
+                center: location ? [location.latlng.lat, location.latlng.lng] : [32.303485, 35.035594], // استخدم الموقع المخزن إذا كان موجودًا
                 zoom: zoom,
             });
 
-            // Create a MapTiler Layer inside Leaflet
             const mapTilerLayer = new MaptilerLayer({
                 apiKey: "q0y4wUaL3vWq9jZ5Yfa0",
             });
             mapTilerLayer.addTo(map.current);
 
-            // Request accurate position
-            map.current.findAccuratePosition({
-                maxWait: 15000,
-                desiredAccuracy: 30
-            });
+            if (!location) {
+                map.current.findAccuratePosition({
+                    maxWait: 15000,
+                    desiredAccuracy: 30
+                });
 
-            // Event listeners for accurate position
-            map.current.on('accuratepositionprogress', (e) => {
-                console.log('Accuracy progress:', e.accuracy);
-                console.log('Position:', e.latlng);
-            });
+                map.current.on('accuratepositionprogress', (e) => {
+                    console.log('Accuracy progress:', e.accuracy);
+                    console.log('Position:', e.latlng);
+                });
 
-            map.current.on('accuratepositionfound', (e) => {
-                console.log('Accurate position found:', e.latlng);
-                if (userMarker.current) {
-                    userMarker.current.setLatLng(e.latlng);
-                } else {
-                    userMarker.current = L.marker(e.latlng, { icon: defaultIcon }).addTo(map.current);
-                }
+                map.current.on('accuratepositionfound', (e) => {
+                    console.log('Accurate position found:', e.latlng);
+                    if (userMarker.current) {
+                        userMarker.current.setLatLng(e.latlng);
+                    } else {
+                        userMarker.current = L.marker(e.latlng, { icon: defaultIcon }).addTo(map.current);
+                    }
+                    userMarker.current.bindPopup("<b>Accurate Location</b>").openPopup();
+                    map.current.setView(e.latlng, zoom);
+                    setLocation(e); // حفظ الموقع في Context
+                });
+
+                map.current.on('accuratepositionerror', (e) => {
+                    console.log('Accurate position error:', e.message);
+                    toast.error("Unable to retrieve your accurate location.");
+                });
+            } else {
+                userMarker.current = L.marker([location.latlng.lat, location.latlng.lng], { icon: defaultIcon }).addTo(map.current);
                 userMarker.current.bindPopup("<b>Accurate Location</b>").openPopup();
-                map.current.setView(e.latlng, zoom);
-            });
-
-            map.current.on('accuratepositionerror', (e) => {
-                console.log('Accurate position error:', e.message);
-                toast.error("Unable to retrieve your accurate location.");
-            });
+                map.current.setView([location.latlng.lat, location.latlng.lng], zoom);
+            }
         }
-    }, [zoom]);
+    }, [zoom, location, setLocation]);
 
     useEffect(() => {
         if (isSuccess && map.current) {
