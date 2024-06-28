@@ -8,7 +8,7 @@ import { useGetMapData } from "../../../hooks/use-maps";
 import Loading from "../../../Components/Loading/Loading";
 import { toast } from "sonner";
 
-import "./AccuratePosition";  // Assuming AccuratePosition.js is the file that contains the AccuratePosition code
+import "./AccuratePosition"; 
 
 const Map = () => {
     const {
@@ -21,7 +21,7 @@ const Map = () => {
 
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const userMarker = useRef(null); // Reference for the user marker
+    const userMarker = useRef(null); 
     const [zoom] = useState(12);
 
     var defaultIcon = new L.Icon({
