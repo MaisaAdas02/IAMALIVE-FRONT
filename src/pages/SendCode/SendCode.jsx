@@ -62,6 +62,7 @@ const SendCode = () => {
                 <form className="sendEmail" onSubmit={handleSubmit1}>
                         <img src={logo} alt="Logo Image" />
                         <h1>Enter your email</h1>
+                        <span>you will recieve a code from six digits when you submit on your email, please check your email</span>
                     <input
                         type="email"
                         onChange={(e) => setEmail(e.target.value)}

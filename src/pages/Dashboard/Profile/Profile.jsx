@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../../context/UserProvider";
 import { Tabs, Tab, Box } from '@mui/material';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -15,9 +15,9 @@ export default function Profile() {
     const queryClient = useQueryClient();
 
     const [formInfo, setFormInfo] = useState({
-        name: "",
-        email: "",
-        city: "",
+        name: user?.name || "",
+        email: user?.email || "",
+        city: user?.city || "",
         image: null
     });
 
@@ -26,6 +26,17 @@ export default function Profile() {
         newPassword: '',
         cNewPassword: '',
     });
+
+    useEffect(() => {
+        if (user) {
+            setFormInfo({
+                name: user.name,
+                email: user.email,
+                city: user.city,
+                image: null
+            });
+        }
+    }, [user]);
 
     const handleTabChange = (event, newIndex) => {
         setTabIndex(newIndex);
@@ -81,9 +92,12 @@ export default function Profile() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formdata = new FormData();
-        formInfo.name && formdata.append('name', formInfo.name);
-        formInfo.city && formdata.append('city', formInfo.city);
-        formInfo.image && formdata.append('image', formInfo.image);
+        formdata.append('name', formInfo.name);
+        formdata.append('email', formInfo.email);
+        formdata.append('city', formInfo.city);
+        if (formInfo.image) {
+            formdata.append('image', formInfo.image);
+        }
         updateProfileMutation.mutate(formdata);
     };
 
@@ -190,7 +204,7 @@ export default function Profile() {
                                     <span>Name</span>
                                     <input
                                         type="text"
-                                        defaultValue={user.name}
+                                        value={formInfo.name}
                                         onChange={handleChange}
                                         name="name"
                                     />
@@ -203,7 +217,7 @@ export default function Profile() {
                                         type="email"
                                         name="email"
                                         disabled
-                                        defaultValue={user.email}
+                                        value={formInfo.email}
                                     />
                                 </label>
                             </div>
@@ -212,7 +226,7 @@ export default function Profile() {
                                     <span>City</span>
                                     <input
                                         type="text"
-                                        defaultValue={user.city}
+                                        value={formInfo.city}
                                         onChange={handleChange}
                                         name="city"
                                     />

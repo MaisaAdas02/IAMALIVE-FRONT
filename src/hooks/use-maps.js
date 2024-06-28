@@ -14,7 +14,7 @@ export function useGetMapData() {
                     Authorization: `IAMALIVE__${token}`,
                 },
             });
-            return data.victims;
+            return data.victims || [];
         },
     });
 }

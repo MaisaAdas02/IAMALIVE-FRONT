@@ -9,12 +9,11 @@ import { MdMarkEmailRead, MdLocationCity } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
-
 // import our assets
 import video from "../../assets/video.mp4";
 import logo from "../../assets/iamalive.png";
+//import  InputBox&Loadingcircle from our components
 import InputBox from "../../Components/InputBox/InputBox";
-import Loading from "../../Components/Loading/Loading";
 import Loadingcircle from "../../Components/Loadingcircle/Loadingcircle";
 
 const Register = () => {
@@ -24,6 +23,7 @@ const Register = () => {
           city: "",
           password: "",
           cPassword: "",
+          practiceImage: null,
      });
      const inputs = [
           {
@@ -37,7 +37,7 @@ const Register = () => {
                name: "email",
                type: "email",
                icon: MdMarkEmailRead,
-               placeholder: "example@gmail.com",
+               placeholder: "name@example.com",
                value: formdata.email,
           },
           {
@@ -47,6 +47,7 @@ const Register = () => {
                placeholder: "Palestine",
                value: formdata.city,
           },
+
           {
                name: "password",
                type: "password",

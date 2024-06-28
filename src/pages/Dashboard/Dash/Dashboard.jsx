@@ -1,11 +1,9 @@
 import React, { useContext } from "react";
-import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
     AppBar,
     Box,
     CssBaseline,
-    Divider,
     Drawer,
     IconButton,
     List,
@@ -17,9 +15,6 @@ import {
     Typography,
     Button,
     Avatar,
-    ThemeProvider,
-    createTheme,
-    useTheme,
 } from "@mui/material";
 import {
     AccountCircleOutlined as AccountCircleOutlinedIcon,
@@ -27,8 +22,6 @@ import {
     Menu as MenuIcon,
     TableRows as TableRowsIcon,
     Map as MapIcon,
-    Brightness4 as Brightness4Icon,
-    Brightness7 as Brightness7Icon,
 } from "@mui/icons-material";
 
 import "./Dashboard.css";
@@ -37,66 +30,12 @@ import iamalive from "../../../assets/iamalive.png";
 import { UserContext } from "../../../context/UserProvider";
 
 const drawerWidth = 240;
-const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
 
-function MyApp() {
-    const theme = useTheme();
-    const colorMode = React.useContext(ColorModeContext);
-    return (
-        <IconButton
-            sx={{ ml: 1 }}
-            onClick={colorMode.toggleColorMode}
-            color="inherit"
-        >
-            {theme.palette.mode === "dark" ? (
-                <Brightness4Icon />
-            ) : (
-                <Brightness7Icon />
-            )}
-        </IconButton>
-    );
-}
-
-export default function ToggleColorMode() {
-    const [mode, setMode] = React.useState("light");
-    const colorMode = React.useMemo(
-        () => ({
-            toggleColorMode: () => {
-                setMode((prevMode) =>
-                    prevMode === "light" ? "dark" : "light"
-                );
-            },
-        }),
-        []
-    );
-
-    const theme = React.useMemo(
-        () =>
-            createTheme({
-                palette: {
-                    mode,
-                },
-            }),
-        [mode]
-    );
-
-    return (
-        <ColorModeContext.Provider value={colorMode}>
-            <ThemeProvider theme={theme}>
-                <Dashboard />
-            </ThemeProvider>
-        </ColorModeContext.Provider>
-    );
-}
-
-
-
-function Dashboard(props) {
-    const { window } = props;
+export default function Dashboard() {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
     const navigate = useNavigate();
-    const { pathname } = useLocation()
+    const { pathname } = useLocation();
    
     const handleDrawerClose = () => {
         setIsClosing(true);
@@ -133,7 +72,7 @@ function Dashboard(props) {
             text: "RescueTeam Requests",
             icon: <TableRowsIcon />,
             path: "/dashboard/rescue-requests",
-        })
+        });
         menuItems.push({
             text: "RescueTeam data",
             icon: <TableRowsIcon />,
@@ -156,12 +95,10 @@ function Dashboard(props) {
                 <List>
                     {menuItems.map((item) => (
                         <ListItem key={item.text} disablePadding sx={{
-                            background: pathname == item.path && "#bd3333",
+                            background: pathname === item.path && "#bd3333",
                         }}>
                             <ListItemButton component={Link} to={item.path}>
-                                <ListItemIcon
-                                    sx={{ color: "white" }}
-                                >
+                                <ListItemIcon sx={{ color: "white" }}>
                                     {item.icon}
                                 </ListItemIcon>
                                 <ListItemText
@@ -194,9 +131,6 @@ function Dashboard(props) {
             </Box>
         </Box>
     );
-
-    const container =
-        window !== undefined ? () => window().document.body : undefined;
 
     return (
         <Box sx={{ display: "flex" }} className="dashboard">
@@ -232,7 +166,6 @@ function Dashboard(props) {
                     >
                         I Am Alive
                     </Typography>
-                    <MyApp />
                 </Toolbar>
             </AppBar>
 
@@ -242,7 +175,6 @@ function Dashboard(props) {
                 aria-label="mailbox folders"
             >
                 <Drawer
-                    container={container}
                     variant="temporary"
                     open={mobileOpen}
                     onTransitionEnd={handleDrawerTransitionEnd}
@@ -288,7 +220,3 @@ function Dashboard(props) {
         </Box>
     );
 }
-
-Dashboard.propTypes = {
-    window: PropTypes.func,
-};

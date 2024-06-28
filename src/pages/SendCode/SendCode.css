@@ -4,10 +4,11 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    
+
 }
 
-.sendEmail, .resetpassword {
+.sendEmail,
+.resetpassword {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -19,23 +20,33 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(22, 16, 16, 0.762);
     background-color: #f3ecec82;
-    width: 90%; /* Default to 90% width for better responsiveness */
-    max-width: 500px; /* Limit the maximum width */
+    width: 90%;
+    /* Default to 90% width for better responsiveness */
+    max-width: 500px;
+    /* Limit the maximum width */
 
-    img{
+    img {
         width: 20%;
         height: 30%;
         margin-bottom: 20px;
     }
+
+    span {
+        font-size: small;
+        margin-bottom: 20px;
+    }
 }
 
-.sendEmail h1, .resetpassword h2 {
+.sendEmail h1,
+.resetpassword h2 {
     font-size: 1.5rem;
     margin-bottom: 20px;
 }
 
-.sendEmail input, .resetpassword input {
-    width: 100%; /* Default to full width */
+.sendEmail input,
+.resetpassword input {
+    width: 100%;
+    /* Default to full width */
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
@@ -43,13 +54,15 @@
     font-size: 1rem;
 }
 
-.sendEmail input:focus, .resetpassword input:focus {
+.sendEmail input:focus,
+.resetpassword input:focus {
     border-color: #c75151;
     background-color: rgba(199, 81, 81, 0.063);
     outline: none;
 }
 
-.sendEmail button, .resetpassword button {
+.sendEmail button,
+.resetpassword button {
     padding: 10px 20px;
     background-color: #c75151;
     color: #fff;
@@ -60,29 +73,42 @@
     transition: background-color 0.3s ease;
 }
 
-.sendEmail button:hover, .resetpassword button:hover {
+.sendEmail button:hover,
+.resetpassword button:hover {
     background-color: rgba(199, 81, 81, 0.153);
 }
 
 /* Media Queries for Responsive Design */
 @media screen and (max-width: 768px) {
-    .sendEmail, .resetpassword {
-        width: 80%; /* Slightly wider for tablets */
+
+    .sendEmail,
+    .resetpassword {
+        width: 80%;
+        /* Slightly wider for tablets */
     }
 }
 
 @media screen and (max-width: 480px) {
-    .sendEmail, .resetpassword {
-        width: 95%; /* Full width for mobile screens */
-        padding: 15px; /* Reduce padding for smaller screens */
+
+    .sendEmail,
+    .resetpassword {
+        width: 95%;
+        /* Full width for mobile screens */
+        padding: 15px;
+        /* Reduce padding for smaller screens */
     }
 
-    .sendEmail h1, .resetpassword h2 {
-        font-size: 1.2rem; /* Smaller font size for headers */
+    .sendEmail h1,
+    .resetpassword h2 {
+        font-size: 1.2rem;
+        /* Smaller font size for headers */
     }
 
-    .sendEmail button, .resetpassword button {
-        font-size: 0.9rem; /* Smaller font size for buttons */
-        padding: 10px; /* Adjust padding for buttons */
+    .sendEmail button,
+    .resetpassword button {
+        font-size: 0.9rem;
+        /* Smaller font size for buttons */
+        padding: 10px;
+        /* Adjust padding for buttons */
     }
 }
