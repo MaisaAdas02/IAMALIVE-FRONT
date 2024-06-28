@@ -1,5 +1,5 @@
 import "./Map.css";
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useEffect, useContext,useState } from "react";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "./Map.css";
@@ -9,7 +9,7 @@ import Loading from "../../../Components/Loading/Loading";
 import { toast } from "sonner";
 
 import "./AccuratePosition";
-import { LocationContext } from '../../../LocationContext'; // تأكد من تحديد المسار الصحيح
+//import { LocationContext } from "../../../context/LocationContext";
 
 const Map = () => {
     const { location, setLocation } = useContext(LocationContext);
@@ -57,7 +57,7 @@ const Map = () => {
 
         if (!map.current) {
             map.current = L.map(mapContainer.current, {
-                center: location ? [location.latlng.lat, location.latlng.lng] : [32.303485, 35.035594], // استخدم الموقع المخزن إذا كان موجودًا
+                center: location ? [location.latlng.lat, location.latlng.lng] : [32.303485, 35.035594], 
                 zoom: zoom,
             });
 
@@ -84,9 +84,9 @@ const Map = () => {
                     } else {
                         userMarker.current = L.marker(e.latlng, { icon: defaultIcon }).addTo(map.current);
                     }
-                    userMarker.current.bindPopup("<b>Accurate Location</b>").openPopup();
+                    userMarker.current.bindPopup("<b>your location</b>").openPopup();
                     map.current.setView(e.latlng, zoom);
-                    setLocation(e); // حفظ الموقع في Context
+                    setLocation(e); 
                 });
 
                 map.current.on('accuratepositionerror', (e) => {
