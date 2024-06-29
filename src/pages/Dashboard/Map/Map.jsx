@@ -8,8 +8,6 @@ import { useGetMapData } from "../../../hooks/use-maps";
 import Loading from "../../../Components/Loading/Loading";
 import { toast } from "sonner";
 
-import "./AccuratePosition"; 
-
 const Map = () => {
     const {
         data: victims,
@@ -21,28 +19,34 @@ const Map = () => {
 
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const userMarker = useRef(null); 
+    const center = { lat: 32.303485, lng: 35.035594 };
     const [zoom] = useState(12);
 
     var defaultIcon = new L.Icon({
-        iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
-        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+        iconUrl:
+            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+        shadowUrl:
+            "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
         iconSize: [25, 41],
         iconAnchor: [12, 41],
         popupAnchor: [1, -34],
         shadowSize: [41, 41],
     });
     var dangerIcon = new L.Icon({
-        iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
-        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+        iconUrl:
+            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+        shadowUrl:
+            "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
         iconSize: [25, 41],
         iconAnchor: [12, 41],
         popupAnchor: [1, -34],
         shadowSize: [41, 41],
     });
     var inProgressIcon = new L.Icon({
-        iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
-        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+        iconUrl:
+            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
+        shadowUrl:
+            "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
         iconSize: [25, 41],
         iconAnchor: [12, 41],
         popupAnchor: [1, -34],
@@ -54,7 +58,7 @@ const Map = () => {
 
         if (!map.current) {
             map.current = L.map(mapContainer.current, {
-                center: [32.303485, 35.035594], // Set an initial center
+                center: L.latLng(center.lat, center.lng),
                 zoom: zoom,
             });
 
@@ -64,35 +68,13 @@ const Map = () => {
             });
             mapTilerLayer.addTo(map.current);
 
-            // Request accurate position
-            map.current.findAccuratePosition({
-                maxWait: 15000,
-                desiredAccuracy: 30
-            });
-
-            // Event listeners for accurate position
-            map.current.on('accuratepositionprogress', (e) => {
-                console.log('Accuracy progress:', e.accuracy);
-                console.log('Position:', e.latlng);
-            });
-
-            map.current.on('accuratepositionfound', (e) => {
-                console.log('Accurate position found:', e.latlng);
-                if (userMarker.current) {
-                    userMarker.current.setLatLng(e.latlng);
-                } else {
-                    userMarker.current = L.marker(e.latlng, { icon: defaultIcon }).addTo(map.current);
-                }
-                userMarker.current.bindPopup("<b>Accurate Location</b>").openPopup();
-                map.current.setView(e.latlng, zoom);
-            });
-
-            map.current.on('accuratepositionerror', (e) => {
-                console.log('Accurate position error:', e.message);
-                toast.error("Unable to retrieve your accurate location.");
-            });
+            // Add a marker to the map at the center coordinates
+            const marker = L.marker([center.lat, center.lng], {
+                icon: defaultIcon,
+            }).addTo(map.current);
+            marker.bindPopup("<b>My Location</b>").openPopup();
         }
-    }, [zoom]);
+    }, [center, zoom]);
 
     useEffect(() => {
         if (isSuccess && map.current) {
@@ -101,11 +83,16 @@ const Map = () => {
                     const marker = L.marker(
                         [v.location.latitude, v.location.longitude],
                         {
-                            icon: v.status === "danger" ? dangerIcon : inProgressIcon,
+                            icon:
+                                v.status == "danger"
+                                    ? dangerIcon
+                                    : inProgressIcon,
                         }
                     ).addTo(map.current);
                     marker
-                        .bindPopup(`<b>${v.name}, ${v.location.latitude}, ${v.location.longitude}</b>`)
+                        .bindPopup(
+                            `<b>${v.name}, ${v.location.latitude}, ${v.location.longitude}</b>`
+                        )
                         .openPopup();
                 }
             });
